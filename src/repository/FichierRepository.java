@@ -15,11 +15,12 @@ public class FichierRepository implements IRepository<Fichier, Integer> {
         Connection conn = SingletonConnection.connection;
         assert conn != null;
         PreparedStatement createStmt = conn.prepareStatement(
-                "INSERT INTO Fichier (name, extension, Reponse_value) VALUES (?, ?, ?)",
+                "INSERT INTO Fichier (name, extension, type, Reponse_value) VALUES (?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS);
         createStmt.setString(1, object.getName());
         createStmt.setString(2, object.getExtension());
-        createStmt.setString(3, object.getReponse().getValue());
+        createStmt.setString(3, object.getType());
+        createStmt.setString(4, object.getReponse().getValue());
         ResultSet res = createStmt.getGeneratedKeys();
         res.next();
         return get(res.getInt(1));
@@ -37,7 +38,7 @@ public class FichierRepository implements IRepository<Fichier, Integer> {
             return null;
         }
 
-        Fichier f = new Fichier(resFichier.getString("name"), resFichier.getString("extension"), resFichier.getString("Reponse_value"));
+        Fichier f = new Fichier(resFichier.getString("name"), resFichier.getString("extension"), resFichier.getString("type"), resFichier.getString("Reponse_value"));
         f.setKey(resFichier.getInt("idFichier"));
 
         return f;
@@ -83,7 +84,7 @@ public class FichierRepository implements IRepository<Fichier, Integer> {
         ResultSet res = pstmt.executeQuery();
 
         while (res.next()) {
-            Fichier f = new Fichier(res.getString("name"), res.getString("extension"), res.getString("Reponse_value"));
+            Fichier f = new Fichier(res.getString("name"), res.getString("extension"), res.getString("type"), res.getString("Reponse_value"));
             fichiers.add(f);
         }
 
