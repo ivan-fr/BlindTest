@@ -6,6 +6,7 @@ import java.util.HashMap;
 public abstract class AbstractModel {
     private Object key;
     private final HashMap<String, Object> manyToOneReferences = new HashMap<>();
+    private final HashMap<String, Object> oneToOneReferences = new HashMap<>();
     private final HashMap<String, ArrayList<Object>> oneToManyReferences = new HashMap<>();
     private final HashMap<String, ArrayList<Object>> manyToManyReferences = new HashMap<>();
 
@@ -21,15 +22,15 @@ public abstract class AbstractModel {
         return manyToManyReferences;
     }
 
+    public HashMap<String, Object> getOneToOneReferences() {
+        return oneToOneReferences;
+    }
+
     public Object getKey() {
         return key;
     }
 
     public void setKey(Object key) {
         this.key = key;
-    }
-
-    public String toStringWithoutRelation() {
-        return "";
     }
 }
