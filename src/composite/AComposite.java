@@ -19,7 +19,7 @@ public abstract class AComposite<T extends AbstractModel, U> {
     public T save(T object) throws SQLException {
         T savedUser = repository.getInstance().save(object);
         if (savedUser != null) {
-            repository.getInstance().save(savedUser);
+            cache.save(savedUser);
         }
         return savedUser;
     }
