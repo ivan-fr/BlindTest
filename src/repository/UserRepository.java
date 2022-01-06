@@ -15,8 +15,7 @@ public class UserRepository implements IRepository<User, String> {
         Connection conn = SingletonConnection.connection;
         assert conn != null;
         PreparedStatement createStmt = conn.prepareStatement(
-                "INSERT INTO User (username, password) VALUES (?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
+                "INSERT INTO User (username, password) VALUES (?, ?)");
         createStmt.setString(1, object.getUsername());
         createStmt.setString(2, object.getPassword());
         createStmt.executeUpdate();

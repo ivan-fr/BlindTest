@@ -15,8 +15,8 @@ public class FichierRepository implements IRepository<Fichier, Integer> {
         Connection conn = SingletonConnection.connection;
         assert conn != null;
         PreparedStatement createStmt = conn.prepareStatement(
-                "INSERT INTO Fichier (name, extension, type, Theme_value, Reponse_value) VALUES (?, ?, ?, ?,?)",
-                Statement.RETURN_GENERATED_KEYS);
+                "INSERT INTO Fichier (name, extension, type, Theme_value, Reponse_value) VALUES (?, ?, ?, ?,?)"
+        );
         createStmt.setString(1, object.getName());
         createStmt.setString(2, object.getExtension());
         createStmt.setString(3, object.getType());
