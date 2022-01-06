@@ -59,7 +59,6 @@ public abstract class AComposite<T extends AbstractModel, U> {
     public void hydrate() throws SQLException {
         List<T> ts = repository.getInstance().list();
         cache.clear();
-
         for (T t : ts) {
             cache.save(t);
         }

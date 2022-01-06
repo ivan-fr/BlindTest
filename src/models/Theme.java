@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Theme extends AbstractModel {
+
     private final String value;
 
     public Theme(String value) {
@@ -23,7 +24,6 @@ public class Theme extends AbstractModel {
         for (Object ref : this.getOneToManyReferences().get("fichiers")) {
             fichiers.add(CompositeFichierSingleton.compositeFichierSingleton.get((Integer) ref));
         }
-
         return fichiers;
     }
 
