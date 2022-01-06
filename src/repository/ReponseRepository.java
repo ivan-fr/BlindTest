@@ -15,12 +15,10 @@ public class ReponseRepository implements IRepository<Reponse, String> {
         Connection conn = SingletonConnection.connection;
         assert conn != null;
         PreparedStatement createStmt = conn.prepareStatement(
-                "INSERT INTO Reponse (value) VALUES (?)",
-                Statement.RETURN_GENERATED_KEYS);
+                "INSERT INTO Reponse (value) VALUES (?)");
         createStmt.setString(1, object.getValue());
-        ResultSet res = createStmt.getGeneratedKeys();
-        res.next();
-        return get(res.getString(1));
+        createStmt.executeUpdate();
+        return get(object.getValue());
     }
 
     @Override

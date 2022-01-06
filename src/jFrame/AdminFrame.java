@@ -1,6 +1,17 @@
 package jFrame;
 
+import composite.CompositeFichierSingleton;
+import composite.CompositeReponseSingleton;
+import composite.CompositeThemeSingleton;
+import models.Fichier;
+import models.Reponse;
+import models.Theme;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import javax.swing.JFileChooser;
 
 
@@ -18,8 +29,8 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JTextField themeInput;
 
 
-    private File file;
-    private String fileName;
+    private File file = null;
+    private String fileAbsolutePath;
 
 
     public AdminFrame() {
@@ -127,28 +138,67 @@ public class AdminFrame extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         file = chooser.getSelectedFile();
-        fileName = file.getAbsolutePath();
-        fileInput.setText(fileName);
+
+        if (file != null) {
+            fileAbsolutePath = file.getAbsolutePath();
+            fileInput.setText(fileAbsolutePath);
+        }
     }
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String theme = "";
         String answer = "";
+
         try {
         theme = themeInput.getText();
         answer = answerInput.getText();
         } catch(Exception e) {
-            e.printStackTrace();
+            file = null;
+            fileAbsolutePath = null;
+            return;
         }
-        if (!theme.isEmpty() && !answer.isBlank())
-        System.out.println("File: " + fileName + " Theme: " + theme + " Answer: " + answer);
-    }
 
+        if (!theme.isEmpty() && !answer.isBlank() && file != null) {
+            try {
+                Files.copy(file.toPath(), new File("./images/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                file = null;
+                fileAbsolutePath = null;
+                return;
+            }
+            try {
+                CompositeThemeSingleton.compositeThemeSingleton.save(new Theme(theme));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                CompositeReponseSingleton.compositeReponseSingleton.save(new Reponse(answer));
+            } catch (SQLException ignored) {
+            }
+
+            try {
+                CompositeFichierSingleton.compositeFichierSingleton.save(new Fichier(file.getName().split("\\.")[0], file.getName().split("\\.")[1], "image", theme, answer));
+                System.out.println("File: " + fileAbsolutePath + " Theme: " + theme + " Answer: " + answer);
+            } catch (SQLException ignored) {
+                System.out.println("File already exist");
+            }
+        }
+
+        file = null;
+        fileAbsolutePath = null;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            System.out.println("Mysql implementation is OK.");
+        } catch (Exception ex) {
+            System.out.println("Mysql implementation error.");
+        }
 
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

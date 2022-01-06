@@ -19,9 +19,8 @@ public class UserRepository implements IRepository<User, String> {
                 Statement.RETURN_GENERATED_KEYS);
         createStmt.setString(1, object.getUsername());
         createStmt.setString(2, object.getPassword());
-        ResultSet res = createStmt.getGeneratedKeys();
-        res.next();
-        return get(res.getString(1));
+        createStmt.executeUpdate();
+        return get(object.getUsername());
     }
 
     @Override

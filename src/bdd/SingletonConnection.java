@@ -16,7 +16,7 @@ public class SingletonConnection {
 
     private static Connection getConnection() {
         try {
-            String password = Files.readString(Path.of("./password.txt"), StandardCharsets.UTF_8);
+            String password = Files.readString(Path.of("password.txt"), StandardCharsets.UTF_8);
             return DriverManager.getConnection("jdbc:mysql://localhost:3306/BlindTest?user=root&password=" + password);
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
