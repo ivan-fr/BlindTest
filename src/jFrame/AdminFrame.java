@@ -18,10 +18,8 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JTextField themeInput;
 
 
-
     private File file;
     private String fileName;
-
 
 
     public AdminFrame() {
@@ -123,7 +121,7 @@ public class AdminFrame extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     private void attachButtonActionPerformed(java.awt.event.ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
@@ -145,6 +143,7 @@ public class AdminFrame extends javax.swing.JFrame {
         if (!theme.isEmpty() && !answer.isBlank())
         System.out.println("File: " + fileName + " Theme: " + theme + " Answer: " + answer);
     }
+
 
     /**
      * @param args the command line arguments
@@ -175,7 +174,5 @@ public class AdminFrame extends javax.swing.JFrame {
             }
         });
     }
-
-
 
 }
