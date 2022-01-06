@@ -1,7 +1,6 @@
 package repository;
 
 import bdd.SingletonConnection;
-import models.Reponse;
 import models.Theme;
 
 import java.sql.*;
@@ -36,7 +35,9 @@ public class ThemeRepository implements IRepository<Theme, String> {
             return null;
         }
 
-        return new Theme(resReponse.getString("value"));
+        Theme t = new Theme(resReponse.getString("value"));
+        affectFichiers(t);
+        return t;
     }
 
     @Override
@@ -79,10 +80,26 @@ public class ThemeRepository implements IRepository<Theme, String> {
 
         while (res.next()) {
             Theme r = new Theme(res.getString("value"));
+            affectFichiers(r);
             fichiers.add(r);
         }
 
         return fichiers;
+    }
+
+    public void affectFichiers(Theme theme) throws SQLException {
+        ArrayList<Object> fichiersKey = new ArrayList<>();
+        Connection conn = SingletonConnection.connection;
+        assert conn != null;
+        PreparedStatement pstmt = conn.prepareStatement("SELECT * from Fichier join Theme T on T.value = Fichier.Theme_value WHERE T.value = ?");
+        pstmt.setString(1, (String) theme.getKey());
+        ResultSet res = pstmt.executeQuery();
+
+        while (res.next()) {
+            fichiersKey.add(res.getInt("idFichier"));
+        }
+
+        theme.getOneToManyReferences().put("fichiers", fichiersKey);
     }
 
     @Override
