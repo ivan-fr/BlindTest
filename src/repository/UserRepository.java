@@ -10,7 +10,6 @@ import java.util.List;
 public class UserRepository implements IRepository<User, String> {
     public final static UserRepository userRepository = new UserRepository();
 
-
     @Override
     public User save(User object) throws SQLException {
         Connection conn = SingletonConnection.connection;
@@ -88,5 +87,10 @@ public class UserRepository implements IRepository<User, String> {
         }
 
         return users;
+    }
+
+    @Override
+    public IRepository<User, String> getInstance() {
+        return userRepository;
     }
 }

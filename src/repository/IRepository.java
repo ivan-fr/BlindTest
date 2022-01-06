@@ -13,4 +13,6 @@ public interface IRepository<T, U> {
     public T update(T object) throws SQLException;
 
     public List<T> list() throws SQLException;
+
+    public IRepository<T, U> getInstance();
 }

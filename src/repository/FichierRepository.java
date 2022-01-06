@@ -90,4 +90,9 @@ public class FichierRepository implements IRepository<Fichier, Integer> {
 
         return fichiers;
     }
+
+    @Override
+    public IRepository<Fichier, Integer> getInstance() {
+        return fichierRepository;
+    }
 }
