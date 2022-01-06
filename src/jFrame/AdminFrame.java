@@ -125,15 +125,15 @@ public class AdminFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void attachButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachButtonActionPerformed
+    private void attachButtonActionPerformed(java.awt.event.ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         file = chooser.getSelectedFile();
         fileName = file.getAbsolutePath();
         fileInput.setText(fileName);
-    }//GEN-LAST:event_attachButtonActionPerformed
+    }
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String theme = "";
         String answer = "";
         try {
