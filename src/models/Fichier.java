@@ -1,6 +1,5 @@
 package models;
 
-import Interfaces.ISocketModelsSerializable;
 import composite.CompositeReponseSingleton;
 import composite.CompositeThemeSingleton;
 
@@ -8,7 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class Fichier extends AbstractModel implements ISocketModelsSerializable<Fichier> {
+public class Fichier extends AbstractModel {
     private final String name;
     private final String extension;
     private final String type;

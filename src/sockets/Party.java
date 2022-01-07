@@ -1,7 +1,8 @@
 package sockets;
 
-import Interfaces.ISocketModelsSerializable;
+import Abstracts.ASocketModelsSerializable;
 import models.Theme;
+import models.User;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Party implements ISocketModelsSerializable<Party> {
-    private final Integer howManyTheme;
+public class Party extends ASocketModelsSerializable<Party> {
+    private final User author;
     private final List<Theme> themes = new ArrayList<>();
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
-    public Party(Integer howManyTheme, Integer howManyQuestions) {
-        this.howManyTheme = howManyTheme;
+    public Party(User author, Integer howManyQuestions) {
+        this.author = author;
         this.howManyQuestions = howManyQuestions;
     }
 
@@ -29,17 +30,14 @@ public class Party implements ISocketModelsSerializable<Party> {
         return themes;
     }
 
-    public Integer getHowManyTheme() {
-        return howManyTheme;
-    }
-
     public Integer getHowManyQuestions() {
         return howManyQuestions;
     }
 
     @Override
     public void serialize(BufferedWriter writer, boolean flush) throws IOException {
-        writer.write(howManyTheme);
+        author.serialize(writer, false);
+        writer.write(themes.size());
         writer.write(howManyQuestions);
 
         for (Theme theme:
@@ -55,9 +53,11 @@ public class Party implements ISocketModelsSerializable<Party> {
     }
 
     public static Party deserialize(BufferedReader reader) throws IOException {
-        Party party = new Party(reader.read(), reader.read());
+        User author = User.deserialize(reader);
+        int howManyTheme = reader.read();
+        Party party = new Party(author, reader.read());
 
-        for (int i = 0; i < party.getHowManyQuestions(); i++) {
+        for (int i = 0; i < howManyTheme; i++) {
             party.getThemes().add(Theme.deserialize(reader));
         }
 

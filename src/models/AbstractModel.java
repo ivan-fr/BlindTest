@@ -1,9 +1,11 @@
 package models;
 
+import Abstracts.ASocketModelsSerializable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class AbstractModel {
+public abstract class AbstractModel extends ASocketModelsSerializable<AbstractModel> {
     private Object key;
     private final HashMap<String, Object> manyToOneReferences = new HashMap<>();
     private final HashMap<String, Object> oneToOneReferences = new HashMap<>();

@@ -1,7 +1,7 @@
 package models;
 
 import composite.CompositeFichierSingleton;
-import Interfaces.ISocketModelsSerializable;
+import Abstracts.ASocketModelsSerializable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Theme extends AbstractModel implements ISocketModelsSerializable<Theme> {
+public class Theme extends AbstractModel {
     private final String value;
 
     public Theme(String value) {

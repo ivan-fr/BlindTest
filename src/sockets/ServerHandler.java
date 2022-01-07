@@ -1,15 +1,15 @@
 package sockets;
 
-import Interfaces.ISocketModelsSerializable;
+import Abstracts.ASocketModelsSerializable;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientServerRunner implements Runnable {
-    public static List<ClientServerRunner> runningServersHandler = new ArrayList<>();
-    public static List<Party> Parties = new ArrayList<>();
+public class ServerHandler implements Runnable {
+    public static final List<ServerHandler> runningServersHandler = new ArrayList<>();
+    public static final List<Party> Parties = new ArrayList<>();
 
     private final Socket clientSocket;
     private final BufferedReader reader;
@@ -17,7 +17,7 @@ public class ClientServerRunner implements Runnable {
     private final String me = null;
     private final Party selectedParty = null;
 
-    public ClientServerRunner(Socket clientSocket) throws IOException {
+    public ServerHandler(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         this.writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         this.reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -40,10 +40,10 @@ public class ClientServerRunner implements Runnable {
         }
     }
 
-    private synchronized void broadcastModel(ISocketModelsSerializable model) throws IOException {
+    private synchronized void broadcastModel(ASocketModelsSerializable<Object> model) throws IOException {
         System.out.println("broadcast model process");
 
-        for (ClientServerRunner runningServer : runningServersHandler) {
+        for (ServerHandler runningServer : runningServersHandler) {
             if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
                 model.serialize(runningServer.writer, true);
             }

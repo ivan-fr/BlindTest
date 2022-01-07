@@ -35,7 +35,7 @@ public class ServerMain {
         CompositeReponseSingleton.compositeReponseSingleton.hydrate();
         CompositeThemeSingleton.compositeThemeSingleton.hydrate();
 
-        ServerSocket serverSocket = new ServerSocket(PORT);
+        serverSocket = new ServerSocket(PORT);
         System.out.println("Waiting connection...");
         waitConnection();
     }
@@ -45,7 +45,7 @@ public class ServerMain {
             while(!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("A client has joined");
-                ClientServerRunner clientServerRunner = new ClientServerRunner(clientSocket);
+                ServerHandler clientServerRunner = new ServerHandler(clientSocket);
                 Thread thread = new Thread(clientServerRunner);
                 thread.start();
             }

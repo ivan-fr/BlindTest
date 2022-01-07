@@ -1,11 +1,10 @@
 package models;
 
-import Interfaces.ISocketModelsSerializable;
-
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class User extends AbstractModel implements ISocketModelsSerializable<User> {
+public class User extends AbstractModel {
     private final String username;
     private final String password;
 
@@ -30,6 +29,19 @@ public class User extends AbstractModel implements ISocketModelsSerializable<Use
 
     @Override
     public void serialize(BufferedWriter writer, boolean flush) throws IOException {
+        writer.write(username);
+        writer.newLine();
+        writer.write(password);
+        writer.newLine();
 
+        if (flush) {
+            writer.flush();
+        }
+    }
+
+    public static User deserialize(BufferedReader reader) throws IOException {
+        String username = reader.readLine();
+        String password = reader.readLine();
+        return new User(username, password);
     }
 }
