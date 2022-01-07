@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="netbeans.lib" type="repository">
+    <properties maven-id="org.netbeans:lib:3.6" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/netbeans/lib/3.6/lib-3.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
