@@ -24,7 +24,7 @@ public class ServerHandler implements Runnable {
     private final BufferedWriter writerBroadcast;
 
     private String me = null;
-    private final Party selectedParty = null;
+    private Party selectedParty = null;
 
     public ServerHandler(ServerSocket serverSocket, Socket clientSocket) throws IOException {
         this.broadcastClient = serverSocket.accept();
@@ -55,7 +55,25 @@ public class ServerHandler implements Runnable {
             signUp();
         } else if (EnumSocketAction.SIGNIN.ordinal() == action) {
             signIn();
+        } else if (EnumSocketAction.SIGNOUT.ordinal() == action) {
+            signOut();
         }
+    }
+
+    public synchronized void signOut() throws IOException {
+        if (me == null) {
+            writer.write(0);
+            System.out.println("send 1");
+            writer.flush();
+            return;
+        }
+
+        me = null;
+        serversHandler.remove(this);
+
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
     }
 
     public void signUp() throws IOException, SQLException {
@@ -71,7 +89,7 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    public void signIn() throws IOException, SQLException {
+    public synchronized void signIn() throws IOException, SQLException {
         User targetFromClient = User.deserialize(reader);
         User userExist = CompositeUserSingleton.compositeUserSingleton.get((String) targetFromClient.getKey());
 

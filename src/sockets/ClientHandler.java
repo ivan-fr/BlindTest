@@ -48,7 +48,12 @@ public class ClientHandler {
         }
 
         writer.write(action.ordinal());
-        model.serialize(writer, true);
+
+        if (model == null) {
+            writer.flush();
+        } else {
+            model.serialize(writer, true);
+        }
 
         int response = reader.read();
         return response == 1;
@@ -56,6 +61,15 @@ public class ClientHandler {
 
     public boolean signUp(String username, String password) throws IOException {
         return sendAction(EnumSocketAction.SIGNUP, new User(username, password));
+    }
+
+    public boolean signOut() throws IOException {
+        if (sendAction(EnumSocketAction.SIGNOUT, null)) {
+            me = null;
+            return true;
+        }
+
+        return false;
     }
 
     public boolean signIn(String username, String password) throws IOException {

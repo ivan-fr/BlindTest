@@ -6,7 +6,6 @@ import sockets.ClientHandler;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -117,7 +116,7 @@ public class MainFrame extends javax.swing.JFrame {
         sessionName = new javax.swing.JTextField();
         createSessionButton = new javax.swing.JButton();
         signOutButton = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
+        connectedUsername = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         sessionTable = new javax.swing.JTable();
@@ -618,10 +617,10 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jPanel4.add(signOutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 10, -1, -1));
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Username");
-        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
+        connectedUsername.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        connectedUsername.setForeground(new java.awt.Color(255, 255, 255));
+        connectedUsername.setText("Username");
+        jPanel4.add(connectedUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 50));
@@ -794,16 +793,26 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
 
-    private void signOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void signOutButtonActionPerformed(java.awt.event.ActionEvent evt)  {
+        try {
+            if (client.signOut()) {
+                connectedUsername.setText("");
+                jTabbedPane1.setSelectedIndex(0);
+            }
+        } catch (IOException e) {
+            // problem
+        }
     }
 
     private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
-
         if (signUpUsername.getText() != null && signUpPassword.getPassword() != null) {
             if (Arrays.equals(signUpPassword.getPassword(), signUpConfirmPassword.getPassword())) {
                 try {
-                    client.signUp(signUpUsername.getText(), String.valueOf(signUpPassword.getPassword()));
+                    if (client.signUp(signUpUsername.getText(), String.valueOf(signUpPassword.getPassword()))) {
+                        jTabbedPane1.setSelectedIndex(0);
+                    } else {
+                        // wrong credentials
+                    }
                 } catch (IOException e) {
                     // user already exist
                 }
@@ -819,13 +828,16 @@ public class MainFrame extends javax.swing.JFrame {
             try {
                 if (client.signIn(signInUsername.getText(), String.valueOf(signInPassword.getPassword()))) {
                     System.out.println(client.getMe());
-                    jLabel13.setText(client.getMe().getUsername());
+                    connectedUsername.setText(client.getMe().getUsername());
                     jTabbedPane1.setSelectedIndex(3);
                 }
             } catch (IOException e) {
                 // wrong credential
             }
         }
+
+        signInUsername.setText("");
+        signInPassword.setText("");
     }
 
     private void redirectToSignUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -862,7 +874,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel connectedUsername;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
