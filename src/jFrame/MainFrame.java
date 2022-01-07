@@ -1,6 +1,8 @@
 package jFrame;
 
 
+import sockets.ClientHandler;
+
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
@@ -12,8 +14,10 @@ public class MainFrame extends javax.swing.JFrame {
 
 
     DefaultTableModel tableModel;
+    ClientHandler client;
 
-    public MainFrame() {
+    public MainFrame(ClientHandler client) {
+        this.client = client ;
         initComponents();
         sessionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableModel = (DefaultTableModel) sessionTable.getModel();
@@ -810,38 +814,10 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
 
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
 
-    // Variables declaration - do not modify
+    // Variables declaration
     private javax.swing.JButton choice1;
     private javax.swing.JButton choice2;
     private javax.swing.JButton choice3;
