@@ -1,7 +1,7 @@
 package sockets;
 
 public enum EnumSocketAction {
-    CONNEXION,
+    SIGNIN,
     SIGNUP,
     DISCONNECT
 }

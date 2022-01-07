@@ -16,7 +16,7 @@ public class ClientHandler {
     private final BufferedReader readerBroadcast;
     private final BufferedWriter writerBroadcast;
 
-    private String username;
+    private User me;
 
     public ClientHandler(Socket clientSocket, Socket broadCastSocket) throws IOException {
         this.clientSocket = clientSocket;
@@ -38,6 +38,10 @@ public class ClientHandler {
         }).start();
     }
 
+    public User getMe() {
+        return me;
+    }
+
     public boolean sendAction(EnumSocketAction action, ASocketModelSerializable model) throws IOException {
         if (!clientSocket.isConnected()) {
             return false;
@@ -52,6 +56,15 @@ public class ClientHandler {
 
     public boolean signUp(String username, String password) throws IOException {
         return sendAction(EnumSocketAction.SIGNUP, new User(username, password));
+    }
+
+    public boolean signIn(String username, String password) throws IOException {
+        if (sendAction(EnumSocketAction.SIGNIN, new User(username, password))) {
+            me = User.deserialize(reader);
+            return true;
+        }
+
+        return false;
     }
 
     public void actionDispatcher(Integer action) throws IOException {

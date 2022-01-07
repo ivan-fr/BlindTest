@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerHandler implements Runnable {
-    public static final List<ServerHandler> runningServersHandler = new ArrayList<>();
+    public static final List<ServerHandler> serversHandler = new ArrayList<>();
     public static final List<Party> Parties = new ArrayList<>();
 
     private final Socket clientSocket;
@@ -23,7 +23,7 @@ public class ServerHandler implements Runnable {
     private final BufferedReader readerBroadcast;
     private final BufferedWriter writerBroadcast;
 
-    private final String me = null;
+    private String me = null;
     private final Party selectedParty = null;
 
     public ServerHandler(ServerSocket serverSocket, Socket clientSocket) throws IOException {
@@ -53,6 +53,8 @@ public class ServerHandler implements Runnable {
         System.out.println("receive action : " + action);
         if (EnumSocketAction.SIGNUP.ordinal() == action) {
             signUp();
+        } else if (EnumSocketAction.SIGNIN.ordinal() == action) {
+            signIn();
         }
     }
 
@@ -69,10 +71,27 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
+    public void signIn() throws IOException, SQLException {
+        User targetFromClient = User.deserialize(reader);
+        User userExist = CompositeUserSingleton.compositeUserSingleton.get((String) targetFromClient.getKey());
+
+        if (userExist != null && targetFromClient.getPassword().contentEquals(userExist.getPassword())) {
+            writer.write(1);
+            userExist.serialize(writer, true);
+            me = (String) userExist.getKey();
+            serversHandler.add(this);
+            return;
+        }
+
+        writer.write(0);
+        System.out.println("send 0");
+        writer.flush();
+    }
+
     private synchronized void broadcastModel(ASocketModelSerializable<Object> model) throws IOException {
         System.out.println("broadcast model process");
 
-        for (ServerHandler runningServer : runningServersHandler) {
+        for (ServerHandler runningServer : serversHandler) {
             if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
                 model.serialize(runningServer.writerBroadcast, true);
             }
@@ -80,6 +99,6 @@ public class ServerHandler implements Runnable {
     }
 
     private void removeServer() {
-        runningServersHandler.remove(this);
+        serversHandler.remove(this);
     }
 }
