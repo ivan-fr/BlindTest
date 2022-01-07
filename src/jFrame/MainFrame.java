@@ -860,9 +860,6 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-
-
-
     // Variables declaration
     private javax.swing.JButton choice1;
     private javax.swing.JButton choice2;
