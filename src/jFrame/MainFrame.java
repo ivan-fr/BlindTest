@@ -1,11 +1,13 @@
 package jFrame;
 
 
+import models.Theme;
 import sockets.ClientHandler;
 
 import java.awt.Image;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -34,16 +36,22 @@ public class MainFrame extends javax.swing.JFrame {
         sessionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableModel = (DefaultTableModel) sessionTable.getModel();
         jTabbedPane1.setSelectedIndex(0);
-        for (int i=0; i<10; i++) {
-            tableModel.addRow(new Object[]{1,1,1,1});
-        }
         ImageIcon icon = new ImageIcon(getClass().getResource("/images/deadpool.jpg"));
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
         jLabel19.setIcon(scaledIcon); // NOI18N
+    }
 
+    public void updateThemeTable(List<Theme> themes) {
+        DefaultTableModel dm = (DefaultTableModel)themeTable.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
 
+        for (Theme theme:
+             themes) {
+            ((DefaultTableModel) themeTable.getModel()).addRow(new Object[]{theme.getValue(), false});
+        }
     }
 
     /**
@@ -829,6 +837,7 @@ public class MainFrame extends javax.swing.JFrame {
                 if (client.signIn(signInUsername.getText(), String.valueOf(signInPassword.getPassword()))) {
                     System.out.println(client.getMe());
                     connectedUsername.setText(client.getMe().getUsername());
+                    client.get_themes();
                     jTabbedPane1.setSelectedIndex(3);
                 }
             } catch (IOException e) {

@@ -30,7 +30,9 @@ public class ClientMain {
         ClientHandler clientHandler = new ClientHandler(socketClientAction, socketBroadcast);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame(clientHandler).setVisible(true);
+                MainFrame mainFrame = new MainFrame(clientHandler);
+                clientHandler.setMainFrame(mainFrame);
+                mainFrame.setVisible(true);
             }
         });
     }

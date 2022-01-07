@@ -1,10 +1,13 @@
 package sockets;
 
 import Abstracts.ASocketModelSerializable;
+import jFrame.MainFrame;
+import models.Theme;
 import models.User;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientHandler {
     private final Socket clientSocket;
@@ -15,6 +18,8 @@ public class ClientHandler {
 
     private final BufferedReader readerBroadcast;
     private final BufferedWriter writerBroadcast;
+
+    private MainFrame mainFrame = null;
 
     private User me;
 
@@ -31,11 +36,16 @@ public class ClientHandler {
             while (broadCastSocket.isConnected()) {
                 try {
                     int choose = readerBroadcast.read();
-                    actionDispatcher(choose);
+                    System.out.println(choose);
+                    broadCastActionDispatcher(choose);
                 } catch (IOException ignored) {
                 }
             }
         }).start();
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
     }
 
     public User getMe() {
@@ -81,7 +91,29 @@ public class ClientHandler {
         return false;
     }
 
-    public void actionDispatcher(Integer action) throws IOException {
+    private void get_themes_broadcast() throws IOException {
+        Integer howManyThemes = readerBroadcast.read();
 
+        System.out.println(howManyThemes);
+
+        ArrayList<Theme> themes = new ArrayList<>();
+
+        for (int i = 0; i < howManyThemes; i++) {
+            themes.add(Theme.deserialize(readerBroadcast));
+        }
+
+        System.out.println(themes);
+
+        mainFrame.updateThemeTable(themes);
+    }
+
+    public boolean get_themes() throws IOException {
+        return sendAction(EnumSocketAction.GET_THEMES, null);
+    }
+
+    public void broadCastActionDispatcher(Integer action) throws IOException {
+        if (EnumSocketAction.GET_THEMES.ordinal() == action) {
+            get_themes_broadcast();
+        }
     }
 }

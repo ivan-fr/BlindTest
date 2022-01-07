@@ -1,7 +1,9 @@
 package sockets;
 
 import Abstracts.ASocketModelSerializable;
+import composite.CompositeThemeSingleton;
 import composite.CompositeUserSingleton;
+import models.Theme;
 import models.User;
 
 import java.io.*;
@@ -42,6 +44,7 @@ public class ServerHandler implements Runnable {
         while (clientSocket.isConnected()) {
             try {
                 int action = reader.read();
+                if (action == -1) break;
                 actionDispatcher(action);
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
@@ -57,7 +60,23 @@ public class ServerHandler implements Runnable {
             signIn();
         } else if (EnumSocketAction.SIGNOUT.ordinal() == action) {
             signOut();
+        } else if (EnumSocketAction.GET_THEMES.ordinal() == action) {
+            getThemes();
         }
+    }
+
+    public void getThemes() throws IOException {
+        if (me == null) {
+            writer.write(0);
+            System.out.println("send 1");
+            writer.flush();
+            return;
+        }
+
+        broadcastModelArray(EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
     }
 
     public synchronized void signOut() throws IOException {
@@ -106,12 +125,35 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    private synchronized void broadcastModel(ASocketModelSerializable<Object> model) throws IOException {
+    private synchronized<T extends ASocketModelSerializable<T>>  void broadcastModel(EnumSocketAction action, T model) throws IOException {
         System.out.println("broadcast model process");
 
         for (ServerHandler runningServer : serversHandler) {
             if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+                runningServer.writerBroadcast.write(action.ordinal());
                 model.serialize(runningServer.writerBroadcast, true);
+            }
+        }
+    }
+
+    private synchronized <T extends ASocketModelSerializable<T>> void broadcastModelArray(EnumSocketAction action, List<T> models) throws IOException {
+        System.out.println("broadcast array model process");
+
+        for (ServerHandler runningServer : serversHandler) {
+            if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+                runningServer.writerBroadcast.write(action.ordinal());
+                runningServer.writerBroadcast.write(models.size());
+                runningServer.writerBroadcast.flush();
+
+                try {
+                    for (T model :
+                            models) {
+                        model.serialize(runningServer.writerBroadcast, false);
+                    }
+                    runningServer.writerBroadcast.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

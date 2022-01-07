@@ -3,5 +3,6 @@ package sockets;
 public enum EnumSocketAction {
     SIGNIN,
     SIGNUP,
-    SIGNOUT
+    SIGNOUT,
+    GET_THEMES
 }

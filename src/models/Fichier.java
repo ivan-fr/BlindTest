@@ -1,5 +1,6 @@
 package models;
 
+import Abstracts.ASocketModelSerializable;
 import composite.CompositeReponseSingleton;
 import composite.CompositeThemeSingleton;
 
