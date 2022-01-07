@@ -13,12 +13,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Party extends ASocketModelsSerializable<Party> {
     private final User author;
+    private final String partyName;
     private final List<Theme> themes = new ArrayList<>();
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
-    public Party(User author, Integer howManyQuestions) {
+    public Party(User author, String partyName, Integer howManyQuestions) {
         this.author = author;
+        this.partyName = partyName;
         this.howManyQuestions = howManyQuestions;
     }
 
@@ -37,7 +39,12 @@ public class Party extends ASocketModelsSerializable<Party> {
     @Override
     public void serialize(BufferedWriter writer, boolean flush) throws IOException {
         author.serialize(writer, false);
+
         writer.write(themes.size());
+
+        writer.write(this.partyName);
+        writer.newLine();
+
         writer.write(howManyQuestions);
 
         for (Theme theme:
@@ -56,7 +63,7 @@ public class Party extends ASocketModelsSerializable<Party> {
     public static Party deserialize(BufferedReader reader) throws IOException {
         User author = User.deserialize(reader);
         int howManyTheme = reader.read();
-        Party party = new Party(author, reader.read());
+        Party party = new Party(author, reader.readLine(), reader.read());
 
         for (int i = 0; i < howManyTheme; i++) {
             party.getThemes().add(Theme.deserialize(reader));
