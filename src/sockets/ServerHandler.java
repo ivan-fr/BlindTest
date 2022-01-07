@@ -1,6 +1,6 @@
 package sockets;
 
-import Abstracts.ASocketModelsSerializable;
+import Abstracts.ASocketModelSerializable;
 import composite.CompositeUserSingleton;
 import models.User;
 
@@ -56,7 +56,7 @@ public class ServerHandler implements Runnable {
     }
 
     public void signUp() throws IOException, SQLException {
-        User newUser = CompositeUserSingleton.compositeUserSingleton.save(new User(reader.readLine(), reader.readLine()));
+        User newUser = CompositeUserSingleton.compositeUserSingleton.save(User.deserialize(reader));
 
         if (newUser != null) {
             writer.write(1);
@@ -65,7 +65,7 @@ public class ServerHandler implements Runnable {
         }
     }
 
-    private synchronized void broadcastModel(ASocketModelsSerializable<Object> model) throws IOException {
+    private synchronized void broadcastModel(ASocketModelSerializable<Object> model) throws IOException {
         System.out.println("broadcast model process");
 
         for (ServerHandler runningServer : runningServersHandler) {

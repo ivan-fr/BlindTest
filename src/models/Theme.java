@@ -1,7 +1,6 @@
 package models;
 
 import composite.CompositeFichierSingleton;
-import Abstracts.ASocketModelsSerializable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

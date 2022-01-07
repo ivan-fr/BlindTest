@@ -1,6 +1,6 @@
 package sockets;
 
-import Abstracts.ASocketModelsSerializable;
+import Abstracts.ASocketModelSerializable;
 import models.Theme;
 import models.User;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Party extends ASocketModelsSerializable<Party> {
+public class Party extends ASocketModelSerializable<Party> {
     private final User author;
     private final String partyName;
     private final List<Theme> themes = new ArrayList<>();
