@@ -815,6 +815,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void signInButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        if (signInUsername.getText() != null && signInPassword.getPassword() != null) {
+            try {
+                if (client.signIn(signInUsername.getText(), String.valueOf(signInPassword.getPassword()))) {
+                    System.out.println(client.getMe());
+                    jLabel13.setText(client.getMe().getUsername());
+                    jTabbedPane1.setSelectedIndex(3);
+                }
+            } catch (IOException e) {
+                // wrong credential
+            }
+        }
     }
 
     private void redirectToSignUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
