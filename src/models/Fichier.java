@@ -1,23 +1,22 @@
 package models;
 
+import Interfaces.ISocketModelsSerializable;
 import composite.CompositeReponseSingleton;
 import composite.CompositeThemeSingleton;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 
-public class Fichier extends AbstractModel {
+public class Fichier extends AbstractModel implements ISocketModelsSerializable<Fichier> {
     private final String name;
     private final String extension;
-    private final String reponse;
-    private final String theme;
     private final String type;
 
     public Fichier(String name, String extension, String type,  String theme, String reponse) {
         this.name = name;
         this.extension = extension;
-        this.reponse = reponse;
         this.type = type;
-        this.theme = theme;
         this.getOneToOneReferences().put("reponse", reponse);
         this.getManyToOneReferences().put("theme", theme);
     }
@@ -45,5 +44,10 @@ public class Fichier extends AbstractModel {
     @Override
     public String toString() {
         return String.format("%s.%s", name, extension);
+    }
+
+    @Override
+    public void serialize(BufferedWriter writer, boolean flush) throws IOException {
+
     }
 }

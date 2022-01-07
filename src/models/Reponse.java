@@ -1,7 +1,12 @@
 package models;
 
 
-public class Reponse extends AbstractModel {
+import Interfaces.ISocketModelsSerializable;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+public class Reponse extends AbstractModel implements ISocketModelsSerializable<Reponse> {
     private final String value;
 
     public Reponse(String value) {
@@ -16,5 +21,10 @@ public class Reponse extends AbstractModel {
     @Override
     public String toString() {
         return String.format("%s", value);
+    }
+
+    @Override
+    public void serialize(BufferedWriter writer, boolean flush) throws IOException {
+
     }
 }

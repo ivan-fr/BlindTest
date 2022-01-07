@@ -1,6 +1,11 @@
 package models;
 
-public class User extends AbstractModel {
+import Interfaces.ISocketModelsSerializable;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+public class User extends AbstractModel implements ISocketModelsSerializable<User> {
     private final String username;
     private final String password;
 
@@ -21,5 +26,10 @@ public class User extends AbstractModel {
     @Override
     public String toString() {
         return String.format("%s", username);
+    }
+
+    @Override
+    public void serialize(BufferedWriter writer, boolean flush) throws IOException {
+
     }
 }
