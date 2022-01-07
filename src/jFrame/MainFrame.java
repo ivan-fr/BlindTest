@@ -802,13 +802,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         if (signUpUsername.getText() != null && signUpPassword.getPassword() != null) {
             if (Arrays.equals(signUpPassword.getPassword(), signUpConfirmPassword.getPassword())) {
-                // pass do not match
-            } else {
                 try {
                     client.signUp(signUpUsername.getText(), Arrays.toString(signUpPassword.getPassword()));
                 } catch (IOException e) {
                     // user already exist
                 }
+            } else {
+                // pass do not match
             }
         }
     }
