@@ -1,10 +1,13 @@
 package sockets;
 
 import Abstracts.ASocketModelsSerializable;
+import composite.CompositeUserSingleton;
+import models.User;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +43,25 @@ public class ServerHandler implements Runnable {
             try {
                 int action = reader.read();
                 actionDispatcher(action);
-            } catch (IOException ignored) {
+            } catch (IOException | SQLException ignored) {
             }
         }
     }
 
-    public void actionDispatcher(Integer action) throws IOException {
+    public void actionDispatcher(Integer action) throws IOException, SQLException {
         System.out.println("receive action : " + action);
-        switch (action) {
+        if (EnumSocketAction.SIGNUP.ordinal() == action) {
+            signUp();
+        }
+    }
+
+    public void signUp() throws IOException, SQLException {
+        User newUser = CompositeUserSingleton.compositeUserSingleton.save(new User(reader.readLine(), reader.readLine()));
+
+        if (newUser != null) {
+            writer.write(1);
+        } else {
+            writer.write(0);
         }
     }
 

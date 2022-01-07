@@ -1,8 +1,9 @@
 package sockets;
 
+import models.User;
+
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ClientHandler {
     private final Socket clientSocket;
@@ -13,6 +14,8 @@ public class ClientHandler {
 
     private final BufferedReader readerBroadcast;
     private final BufferedWriter writerBroadcast;
+
+    private String username;
 
     public ClientHandler(Socket clientSocket, Socket broadCastSocket) throws IOException {
         this.clientSocket = clientSocket;
@@ -34,47 +37,34 @@ public class ClientHandler {
         }).start();
     }
 
-    public boolean sendAction(Integer action, Integer dataInteger, String dataString) throws IOException {
+    public boolean sendAction(EnumSocketAction action, Integer[] dataInteger, String[] dataString) throws IOException {
         if (!clientSocket.isConnected()) {
             return false;
         }
 
-        boolean first = true;
-        boolean defer = true;
-        do {
-            if (!first) {
-                System.out.println("Wrong server id");
+        writer.write(action.ordinal());
+        if (dataInteger == null) {
+            for (String data:
+                 dataString) {
+                writer.write(data);
+                writer.newLine();
             }
-
-            System.out.println("Give a server id");
-
-            writer.write(action);
-            writer.flush();
-
-            if (reader.read() == 0) {
-                first = false;
-                continue;
+        } else {
+            for (Integer data:
+                    dataInteger) {
+                writer.write(data);
             }
+        }
+        writer.flush();
 
-            if (dataInteger == null) {
-                writer.write(dataString);
-            } else {
-                writer.write(dataInteger);
-            }
-            writer.flush();
+        return reader.read() == 1;
+    }
 
-            if (reader.read() == 1) {
-                break;
-            }
-
-            first = false;
-        } while (true);
-
-        return defer;
+    public boolean signUp(String username, String password) throws IOException {
+        return sendAction(EnumSocketAction.SIGNUP, null, new String[]{username, password});
     }
 
     public void actionDispatcher(Integer action) throws IOException {
-        switch (action) {
-        }
+
     }
 }
