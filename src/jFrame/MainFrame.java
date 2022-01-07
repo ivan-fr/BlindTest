@@ -26,7 +26,7 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i=0; i<10; i++) {
             tableModel.addRow(new Object[]{1,1,1,1});
         }
-        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/deadpool.jpg")));
+        ImageIcon icon = new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deadpool.jpg")));
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
