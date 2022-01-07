@@ -22,18 +22,17 @@ public class ServerMain {
             System.out.println("Mysql implementation error.");
         }
 
-        try {
-            serverSocket = new ServerSocket(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         CompositeUserSingleton.compositeUserSingleton.hydrate();
         CompositeFichierSingleton.compositeFichierSingleton.hydrate();
         CompositeReponseSingleton.compositeReponseSingleton.hydrate();
         CompositeThemeSingleton.compositeThemeSingleton.hydrate();
 
-        serverSocket = new ServerSocket(PORT);
+        try {
+            serverSocket = new ServerSocket(PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("Waiting connection...");
         waitConnection();
     }
