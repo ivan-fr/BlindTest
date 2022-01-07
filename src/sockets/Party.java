@@ -50,6 +50,7 @@ public class Party extends ASocketModelsSerializable<Party> {
         if (flush) {
             writer.flush();
         }
+
     }
 
     public static Party deserialize(BufferedReader reader) throws IOException {
@@ -60,7 +61,6 @@ public class Party extends ASocketModelsSerializable<Party> {
         for (int i = 0; i < howManyTheme; i++) {
             party.getThemes().add(Theme.deserialize(reader));
         }
-
         party.currentQuestion.set(reader.read());
 
         return party;
