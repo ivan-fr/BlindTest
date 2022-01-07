@@ -40,11 +40,16 @@ public class ServerHandler implements Runnable {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         while (clientSocket.isConnected()) {
             try {
                 int action = reader.read();
-                if (action == -1) break;
+                if (action == -1) {
+                    clientSocket.close();
+                    broadcastClient.close();
+                    serversHandler.remove(this);
+                    break;
+                }
                 actionDispatcher(action);
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
