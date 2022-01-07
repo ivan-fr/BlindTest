@@ -25,8 +25,8 @@ public class ClientMain {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        Socket socketClientAction = new Socket("localhost", 1255);
-        Socket socketBroadcast = new Socket("localhost", 1255);
+        Socket socketClientAction = new Socket("localhost", 1256);
+        Socket socketBroadcast = new Socket("localhost", 1256);
         ClientHandler clientHandler = new ClientHandler(socketClientAction, socketBroadcast);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

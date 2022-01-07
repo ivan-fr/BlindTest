@@ -11,16 +11,8 @@ import java.net.Socket;
 import java.sql.SQLException;
 
 public class ServerMain {
-    private final static int PORT = 1255 ;
-    private static ServerSocket serverSocket = null;
-
-    static {
-        try {
-            serverSocket = new ServerSocket(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private final static int PORT = 1500;
+    private static ServerSocket serverSocket;
 
     public static void main(String[] args) throws IOException, SQLException {
         try {
@@ -28,6 +20,12 @@ public class ServerMain {
             System.out.println("Mysql implementation is OK.");
         } catch (Exception ex) {
             System.out.println("Mysql implementation error.");
+        }
+
+        try {
+            serverSocket = new ServerSocket(PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         CompositeUserSingleton.compositeUserSingleton.hydrate();
