@@ -45,8 +45,8 @@ public class ServerMain {
             while(!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("A client has joined");
-                ServerHandler clientServerRunner = new ServerHandler(clientSocket);
-                Thread thread = new Thread(clientServerRunner);
+                ServerHandler serverHandler = new ServerHandler(serverSocket, clientSocket);
+                Thread thread = new Thread(serverHandler);
                 thread.start();
             }
         } catch (IOException e) {

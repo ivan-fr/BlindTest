@@ -2,16 +2,36 @@ package sockets;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler {
     private final Socket clientSocket;
+    private final Socket broadcastSocket;
+
     private final BufferedReader reader;
     private final BufferedWriter writer;
 
-    public ClientHandler(Socket clientSocket) throws IOException {
+    private final BufferedReader readerBroadcast;
+    private final BufferedWriter writerBroadcast;
+
+    public ClientHandler(Socket clientSocket, Socket broadCastSocket) throws IOException {
         this.clientSocket = clientSocket;
         this.writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         this.reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+        this.broadcastSocket = broadCastSocket;
+        this.writerBroadcast = new BufferedWriter(new OutputStreamWriter(broadCastSocket.getOutputStream()));
+        this.readerBroadcast = new BufferedReader(new InputStreamReader(broadCastSocket.getInputStream()));
+
+        new Thread(() -> {
+            while (broadCastSocket.isConnected()) {
+                try {
+                    int choose = reader.read();
+                    actionDispatcher(choose);
+                } catch (IOException ignored) {
+                }
+            }
+        }).start();
     }
 
     public boolean sendAction(Integer action, Integer dataInteger, String dataString) throws IOException {
