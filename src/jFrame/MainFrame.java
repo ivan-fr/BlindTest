@@ -4,6 +4,8 @@ package jFrame;
 import sockets.ClientHandler;
 
 import java.awt.Image;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
@@ -789,6 +791,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        if (signUpUsername.getText() != null && signUpPassword.getPassword() != null) {
+            if (Arrays.equals(signUpPassword.getPassword(), signUpConfirmPassword.getPassword())) {
+                // pass do not match
+            } else {
+                try {
+                    client.signUp(signUpUsername.getText(), Arrays.toString(signUpPassword.getPassword()));
+                } catch (IOException e) {
+                    // user already exist
+                }
+            }
+        }
     }
 
     private void signInButtonActionPerformed(java.awt.event.ActionEvent evt) {
