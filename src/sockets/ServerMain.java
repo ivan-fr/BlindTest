@@ -14,7 +14,7 @@ public class ServerMain {
     private final static int PORT = 1500;
     private static ServerSocket serverSocket;
 
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) throws IOException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             System.out.println("Mysql implementation is OK.");
@@ -23,10 +23,14 @@ public class ServerMain {
         }
 
 
-        CompositeUserSingleton.compositeUserSingleton.hydrate();
-        CompositeFichierSingleton.compositeFichierSingleton.hydrate();
-        CompositeReponseSingleton.compositeReponseSingleton.hydrate();
-        CompositeThemeSingleton.compositeThemeSingleton.hydrate();
+        try {
+            CompositeUserSingleton.compositeUserSingleton.hydrate();
+            CompositeFichierSingleton.compositeFichierSingleton.hydrate();
+            CompositeReponseSingleton.compositeReponseSingleton.hydrate();
+            CompositeThemeSingleton.compositeThemeSingleton.hydrate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         try {
             serverSocket = new ServerSocket(PORT);
