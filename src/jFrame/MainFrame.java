@@ -26,7 +26,7 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i=0; i<10; i++) {
             tableModel.addRow(new Object[]{1,1,1,1});
         }
-        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../images/deadpool.jpg")));
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/deadpool.jpg")));
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
@@ -245,7 +245,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, 340, 310));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/background.jpg"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 10, 860, 380));
 
         jTabbedPane1.addTab("tab1", jPanel2);
@@ -357,7 +357,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel3.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, -1, 320));
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/background.jpg"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 10, 860, 390));
 
         jTabbedPane1.addTab("tab2", jPanel3);
@@ -372,7 +372,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel17.setText("Session Name");
         jPanel6.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
 
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/background.jpg"))); // NOI18N
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel6.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 50));
         jPanel6.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 460, 220));
 
@@ -388,14 +388,14 @@ public class MainFrame extends javax.swing.JFrame {
         user2.setText("User2");
         jPanel6.add(user2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 60, 30));
 
-        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/user (2).png"))); // NOI18N
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
         jPanel6.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 50, 50));
 
         user3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user3.setText("User3");
         jPanel6.add(user3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 110, 60, 30));
 
-        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/user (2).png"))); // NOI18N
+        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
         jPanel6.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 220, 50, 50));
 
         user4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -457,7 +457,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(255, 51, 51));
 
-        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/user (2).png"))); // NOI18N
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -478,7 +478,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel6.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 150, 90));
 
-        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/user (2).png"))); // NOI18N
+        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
         jPanel6.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 100, 50, 50));
 
         jPanel11.setBackground(new java.awt.Color(0, 204, 0));
@@ -612,7 +612,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel13.setText("Username");
         jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
 
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/background.jpg"))); // NOI18N
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 50));
 
         sessionTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -737,7 +737,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel24.setText("Scores");
         jPanel9.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, 100, -1));
 
-        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/background.jpg"))); // NOI18N
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel9.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 420));
 
         jTabbedPane1.addTab("tab5", jPanel9);
