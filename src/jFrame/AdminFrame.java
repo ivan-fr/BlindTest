@@ -17,7 +17,6 @@ import javax.swing.JFileChooser;
 
 public class AdminFrame extends javax.swing.JFrame {
 
-
     private javax.swing.JButton addButton;
     private javax.swing.JTextField answerInput;
     private javax.swing.JButton attachButton;
