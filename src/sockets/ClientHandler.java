@@ -30,7 +30,7 @@ public class ClientHandler {
         new Thread(() -> {
             while (broadCastSocket.isConnected()) {
                 try {
-                    int choose = reader.read();
+                    int choose = readerBroadcast.read();
                     actionDispatcher(choose);
                 } catch (IOException ignored) {
                 }
@@ -46,7 +46,8 @@ public class ClientHandler {
         writer.write(action.ordinal());
         model.serialize(writer, true);
 
-        return reader.read() == 1;
+        int response = reader.read();
+        return response == 1;
     }
 
     public boolean signUp(String username, String password) throws IOException {

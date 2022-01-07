@@ -43,7 +43,8 @@ public class ServerHandler implements Runnable {
             try {
                 int action = reader.read();
                 actionDispatcher(action);
-            } catch (IOException | SQLException ignored) {
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -58,11 +59,14 @@ public class ServerHandler implements Runnable {
     public void signUp() throws IOException, SQLException {
         User newUser = CompositeUserSingleton.compositeUserSingleton.save(User.deserialize(reader));
 
-        if (newUser != null) {
-            writer.write(1);
-        } else {
+        if (newUser == null) {
             writer.write(0);
+            System.out.println("send 0");
+        } else {
+            writer.write(1);
+            System.out.println("send 1");
         }
+        writer.flush();
     }
 
     private synchronized void broadcastModel(ASocketModelSerializable<Object> model) throws IOException {

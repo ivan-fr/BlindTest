@@ -26,7 +26,7 @@ public class UserRepository implements IRepository<User, String> {
     public User get(String key) throws SQLException {
         Connection conn = SingletonConnection.connection;
         assert conn != null;
-        PreparedStatement pstmt = conn.prepareStatement("SELECT * from User u where value = ? LIMIT 1");
+        PreparedStatement pstmt = conn.prepareStatement("SELECT * from User u where username = ? LIMIT 1");
         pstmt.setString(1, key);
         ResultSet resUser = pstmt.executeQuery();
 
@@ -34,10 +34,7 @@ public class UserRepository implements IRepository<User, String> {
             return null;
         }
 
-        User f = new User(resUser.getString("username"), resUser.getString("password"));
-        f.setKey(resUser.getInt("idUser"));
-
-        return f;
+        return new User(resUser.getString("username"), resUser.getString("password"));
     }
 
     @Override
@@ -45,7 +42,7 @@ public class UserRepository implements IRepository<User, String> {
         Connection conn = SingletonConnection.connection;
         try {
             assert conn != null;
-            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM User WHERE value = ?");
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM User WHERE username = ?");
             pstmt.setString(1, key);
             pstmt.execute();
 
