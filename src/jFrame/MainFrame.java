@@ -696,7 +696,7 @@ public class MainFrame extends javax.swing.JFrame {
                     java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                    false, false
+                    false, true
             };
 
             public Class getColumnClass(int columnIndex) {
