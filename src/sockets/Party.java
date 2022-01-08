@@ -18,6 +18,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private final List<String> themesKey = new ArrayList<>();
     private final HashMap<String, AtomicInteger> participants = new HashMap<>();
     private final HashMap<Fichier, List<Reponse>> questions = new HashMap<>();
+    private Reponse goodReponse;
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
@@ -33,6 +34,14 @@ public class Party extends ASocketModelSerializable<Party> {
 
     public List<String> getThemesKeys() {
         return themesKey;
+    }
+
+    public void setGoodReponse(Reponse reponse) {
+        goodReponse = reponse;
+    }
+
+    public Reponse getGoodReponse() {
+        return goodReponse;
     }
 
     public String getAuthorKey() {
@@ -92,6 +101,8 @@ public class Party extends ASocketModelSerializable<Party> {
             }
         }
 
+        goodReponse.serialize(writer, false);
+
         if (flush) {
             writer.flush();
         }
@@ -138,6 +149,8 @@ public class Party extends ASocketModelSerializable<Party> {
 
             party.questions.put(f, reponses);
         }
+
+        party.goodReponse = Reponse.deserialize(reader);
 
         return party;
     }

@@ -147,6 +147,7 @@ public class ServerHandler implements Runnable {
 
             fichiersByTheme.remove(randomFichier);
             reponses.add(randomFichier.getReponse());
+            p.setGoodReponse(randomFichier.getReponse());
 
             for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
                 Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
