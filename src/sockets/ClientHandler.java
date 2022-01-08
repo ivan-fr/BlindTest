@@ -46,7 +46,8 @@ public class ClientHandler {
                         break;
                     }
                     broadCastActionDispatcher(choose);
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -126,15 +127,18 @@ public class ClientHandler {
         mainFrame.updateThemeTable(themes);
     }
 
-    private void get_themes_parties_broadcast() throws IOException {
+    private void get_parties_broadcast() throws IOException {
         int howManyParties = readerBroadcast.read();
 
+        System.out.println(howManyParties);
+        System.out.println("call functions");
         ArrayList<Party> parties = new ArrayList<>();
 
         for (int i = 0; i < howManyParties; i++) {
             parties.add(Party.deserialize(readerBroadcast));
         }
 
+        System.out.println(parties);
         mainFrame.updateSessionTable(parties);
     }
 
@@ -142,7 +146,7 @@ public class ClientHandler {
         if (EnumSocketAction.GET_THEMES.ordinal() == action) {
             get_themes_broadcast();
         } else if (EnumSocketAction.GET_PARTIES.ordinal() == action) {
-            get_themes_parties_broadcast();
+            get_parties_broadcast();
         }
     }
 }

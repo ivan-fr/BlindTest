@@ -7,6 +7,7 @@ import sockets.Party;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -790,7 +791,24 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void createSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        Integer howManyQuestions = (Integer) jSpinner1.getValue();
+        List<String> themes = new ArrayList<>();
+
+        for (int i = 0; i < themeTable.getModel().getRowCount(); i++) {
+            if ((boolean) themeTable.getModel().getValueAt(i, 1)) {
+                themes.add((String) themeTable.getModel().getValueAt(i, 0));
+            }
+        }
+
+        if (sessionName.getText() == null || howManyQuestions <= 0 || howManyQuestions > 10 || themes.size() == 0) {
+            return;
+        }
+
+        try {
+            client.add_party(sessionName.getText(), howManyQuestions, themes);
+        } catch (IOException e) {
+            // problem
+        }
     }
 
     private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {

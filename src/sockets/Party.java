@@ -88,13 +88,18 @@ public class Party extends ASocketModelSerializable<Party> {
     public static Party deserialize(BufferedReader reader) throws IOException {
         String authorKey = reader.readLine();
         int howManyThemes = reader.read();
-        Party party = new Party(authorKey, reader.readLine(), reader.read());
+        String partyName = reader.readLine();
+        int howManyQuestions = reader.read();
+
+        Party party = new Party(authorKey, partyName, howManyQuestions);
 
         for (int i = 0; i < howManyThemes; i++) {
-            party.getThemesKeys().add(reader.readLine());
+            String themeKey = reader.readLine();
+            party.getThemesKeys().add(themeKey);
         }
 
-        party.currentQuestion.set(reader.read());
+        Integer currentQuestion = reader.read();
+        party.currentQuestion.set(currentQuestion);
         int howManyParticipants = reader.read();
 
         for (int i = 0; i < howManyParticipants; i++) {
@@ -106,5 +111,13 @@ public class Party extends ASocketModelSerializable<Party> {
         }
 
         return party;
+    }
+
+    @Override
+    public String toString() {
+        return "Party{" +
+                "authorKey='" + authorKey + '\'' +
+                ", partyName='" + partyName + '\'' +
+                '}';
     }
 }

@@ -82,7 +82,7 @@ public class ServerHandler implements Runnable {
         }
 
         parties.add(p);
-        broadcastModelArray(EnumSocketAction.ADD_PARTY, parties);
+        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
@@ -179,9 +179,5 @@ public class ServerHandler implements Runnable {
                 }
             }
         }
-    }
-
-    private void removeServer() {
-        serversHandler.remove(this);
     }
 }
