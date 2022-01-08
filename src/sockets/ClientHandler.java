@@ -22,8 +22,8 @@ public class ClientHandler {
     private final BufferedWriter writerBroadcast;
 
     private MainFrame mainFrame = null;
-
-    private User me;
+    private User me = null;
+    private Party mySession = null;
 
     public ClientHandler(Socket clientSocket, Socket broadCastSocket) throws IOException {
         this.clientSocket = clientSocket;
@@ -59,6 +59,10 @@ public class ClientHandler {
 
     public User getMe() {
         return me;
+    }
+
+    public Party getMySession() {
+        return mySession;
     }
 
     public boolean sendAction(EnumSocketAction action, ASocketModelSerializable model) throws IOException {
@@ -108,7 +112,25 @@ public class ClientHandler {
         Party p = new Party(me.getUsername(), partyName, howManyQuestions);
         p.getThemesKeys().addAll(themes);
 
-        return sendAction(EnumSocketAction.ADD_PARTY, p);
+        if (sendAction(EnumSocketAction.ADD_PARTY, p)) {
+            return join_party(partyName);
+        }
+
+        return false;
+    }
+
+    public boolean join_party(String partyName) throws IOException {
+        if (me == null) {
+            return false;
+        }
+
+        Party p = new Party("", partyName, 0);
+        if (sendAction(EnumSocketAction.JOIN_PARTY, p)) {
+            mySession = Party.deserialize(reader);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean get_themes() throws IOException {
@@ -130,15 +152,12 @@ public class ClientHandler {
     private void get_parties_broadcast() throws IOException {
         int howManyParties = readerBroadcast.read();
 
-        System.out.println(howManyParties);
-        System.out.println("call functions");
         ArrayList<Party> parties = new ArrayList<>();
 
         for (int i = 0; i < howManyParties; i++) {
             parties.add(Party.deserialize(readerBroadcast));
         }
 
-        System.out.println(parties);
         mainFrame.updateSessionTable(parties);
     }
 

@@ -63,7 +63,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         for (Party p:
                 parties) {
-            ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKeys().toString(), p.getHowManyQuestions()});
+            if (p.getCurrentQuestion() == 0 && p.getParticipants().size() < 4) {
+                ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKeys().toString(), p.getHowManyQuestions()});
+            }
         }
     }
 
@@ -145,7 +147,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel26 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        textJoinSession = new javax.swing.JTextPane();
         jLabel28 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         themeTable = new javax.swing.JTable();
@@ -689,7 +691,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel4.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 420, -1, -1));
         jPanel4.add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 80, 50, 30));
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(textJoinSession);
 
         jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 420, 180, -1));
 
@@ -805,7 +807,10 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         try {
-            client.add_party(sessionName.getText(), howManyQuestions, themes);
+            if (client.add_party(sessionName.getText(), howManyQuestions, themes)) {
+                jLabel17.setText(client.getMySession().getPartyName());
+                jTabbedPane1.setSelectedIndex(2);
+            }
         } catch (IOException e) {
             // problem
         }
@@ -828,7 +833,18 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void joinSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        if (textJoinSession.getText() == null) {
+            return;
+        }
 
+        try {
+            if (client.join_party(textJoinSession.getText())) {
+                jLabel17.setText(client.getMySession().getPartyName());
+                jTabbedPane1.setSelectedIndex(2);
+            }
+        } catch (IOException e) {
+            // problem
+        }
     }
 
     private void signOutButtonActionPerformed(java.awt.event.ActionEvent evt)  {
@@ -960,7 +976,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextPane textJoinSession;
     private javax.swing.JButton joinSessionButton;
     private javax.swing.JButton leaveButton;
     private javax.swing.JButton redirectToSignInButton;

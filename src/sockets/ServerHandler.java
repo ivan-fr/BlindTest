@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerHandler implements Runnable {
     public static final List<ServerHandler> serversHandler = new ArrayList<>();
@@ -68,7 +69,38 @@ public class ServerHandler implements Runnable {
             getThemes();
         } else if (EnumSocketAction.ADD_PARTY.ordinal() == action) {
             add_party();
+        } else if (EnumSocketAction.JOIN_PARTY.ordinal() == action) {
+            join_party();
         }
+    }
+
+    public synchronized void join_party() throws IOException {
+        Party p = Party.deserialize(reader);
+        Party pSelected = null;
+        for (Party party:
+             parties) {
+            if (party.getPartyName().contentEquals(p.getPartyName())) {
+                pSelected = p;
+                break;
+            }
+        }
+
+        if (pSelected == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        AtomicInteger aI = new AtomicInteger();
+        aI.set(0);
+        pSelected.getParticipants().put(me, aI);
+
+        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        writer.write(1);
+        System.out.println("send 1");
+        pSelected.serialize(writer, false);
+        writer.flush();
     }
 
     public synchronized void add_party() throws IOException, SQLException {

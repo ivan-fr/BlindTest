@@ -18,8 +18,8 @@ public class Party extends ASocketModelSerializable<Party> {
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
-    public Party(String authorLey, String partyName, Integer howManyQuestions) {
-        this.authorKey = authorLey;
+    public Party(String authorKey, String partyName, Integer howManyQuestions) {
+        this.authorKey = authorKey;
         this.partyName = partyName;
         this.howManyQuestions = howManyQuestions;
     }
