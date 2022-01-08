@@ -101,7 +101,12 @@ public class Party extends ASocketModelSerializable<Party> {
             }
         }
 
-        goodReponse.serialize(writer, false);
+        if (goodReponse == null) {
+            writer.write("");
+            writer.newLine();
+        } else {
+            goodReponse.serialize(writer, false);
+        }
 
         if (flush) {
             writer.flush();
