@@ -58,8 +58,6 @@ public class ServerHandler implements Runnable {
             }
         }
 
-
-
     public void actionDispatcher(Integer action) throws IOException, SQLException {
         System.out.println("receive action : " + action);
         if (EnumSocketAction.SIGNUP.ordinal() == action) {
@@ -175,7 +173,7 @@ public class ServerHandler implements Runnable {
             userExist.serialize(writer, true);
             me = (String) userExist.getKey();
             serversHandler.add(this);
-            broadcastModelArray(EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
+            broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
             return;
         }
 
