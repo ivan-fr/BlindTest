@@ -1,25 +1,25 @@
 package sockets;
 
 import Abstracts.ASocketModelSerializable;
-import models.Theme;
-import models.User;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Party extends ASocketModelSerializable<Party> {
-    private final User author;
+    private final String authorKey;
     private final String partyName;
-    private final List<Theme> themes = new ArrayList<>();
+    private final List<String> themesKey = new ArrayList<>();
+    private final HashMap<String, AtomicInteger> participants = new HashMap<>();
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
-    public Party(User author, String partyName, Integer howManyQuestions) {
-        this.author = author;
+    public Party(String authorLey, String partyName, Integer howManyQuestions) {
+        this.authorKey = authorLey;
         this.partyName = partyName;
         this.howManyQuestions = howManyQuestions;
     }
@@ -28,8 +28,20 @@ public class Party extends ASocketModelSerializable<Party> {
         return currentQuestion.get();
     }
 
-    public List<Theme> getThemes() {
-        return themes;
+    public List<String> getThemesKeys() {
+        return themesKey;
+    }
+
+    public String getAuthorKey() {
+        return authorKey;
+    }
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public List<String> getThemesKey() {
+        return themesKey;
     }
 
     public Integer getHowManyQuestions() {
@@ -38,37 +50,60 @@ public class Party extends ASocketModelSerializable<Party> {
 
     @Override
     public void serialize(BufferedWriter writer, boolean flush) throws IOException {
-        author.serialize(writer, false);
+        writer.write(authorKey);
+        writer.newLine();
 
-        writer.write(themes.size());
+        writer.write(themesKey.size());
 
         writer.write(this.partyName);
         writer.newLine();
 
         writer.write(howManyQuestions);
 
-        for (Theme theme:
-             themes) {
-            theme.serialize(writer, false);
+        for (String theme:
+                themesKey) {
+            writer.write(theme);
+            writer.newLine();
         }
 
         writer.write(currentQuestion.get());
+        writer.write(participants.size());
+
+        for (String u:
+             participants.keySet()) {
+           writer.write(u);
+           writer.newLine();
+           writer.write(participants.get(u).get());
+        }
 
         if (flush) {
             writer.flush();
         }
+    }
 
+    public HashMap<String, AtomicInteger> getParticipants() {
+        return participants;
     }
 
     public static Party deserialize(BufferedReader reader) throws IOException {
-        User author = User.deserialize(reader);
-        int howManyTheme = reader.read();
-        Party party = new Party(author, reader.readLine(), reader.read());
+        String authorKey = reader.readLine();
+        int howManyThemes = reader.read();
+        Party party = new Party(authorKey, reader.readLine(), reader.read());
 
-        for (int i = 0; i < howManyTheme; i++) {
-            party.getThemes().add(Theme.deserialize(reader));
+        for (int i = 0; i < howManyThemes; i++) {
+            party.getThemesKeys().add(reader.readLine());
         }
+
         party.currentQuestion.set(reader.read());
+        int howManyParticipants = reader.read();
+
+        for (int i = 0; i < howManyParticipants; i++) {
+            String userKey = reader.readLine();
+            int points = reader.read();
+            AtomicInteger aI = new AtomicInteger();
+            aI.set(points);
+            party.getParticipants().put(userKey, aI);
+        }
 
         return party;
     }

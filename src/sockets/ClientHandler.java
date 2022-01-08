@@ -5,11 +5,11 @@ import jFrame.MainFrame;
 import models.Theme;
 import models.User;
 
-import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientHandler {
     private final Socket clientSocket;
@@ -99,8 +99,23 @@ public class ClientHandler {
         return false;
     }
 
+    public boolean add_party(String partyName, Integer howManyQuestions, List<String> themes) throws IOException {
+        if (me == null) {
+            return false;
+        }
+
+        Party p = new Party(me.getUsername(), partyName, howManyQuestions);
+        p.getThemesKeys().addAll(themes);
+
+        return sendAction(EnumSocketAction.ADD_PARTY, p);
+    }
+
+    public boolean get_themes() throws IOException {
+        return sendAction(EnumSocketAction.GET_THEMES, null);
+    }
+
     private void get_themes_broadcast() throws IOException {
-        Integer howManyThemes = readerBroadcast.read();
+        int howManyThemes = readerBroadcast.read();
 
         ArrayList<Theme> themes = new ArrayList<>();
 
@@ -111,13 +126,23 @@ public class ClientHandler {
         mainFrame.updateThemeTable(themes);
     }
 
-    public boolean get_themes() throws IOException {
-        return sendAction(EnumSocketAction.GET_THEMES, null);
+    private void get_themes_parties_broadcast() throws IOException {
+        int howManyParties = readerBroadcast.read();
+
+        ArrayList<Party> parties = new ArrayList<>();
+
+        for (int i = 0; i < howManyParties; i++) {
+            parties.add(Party.deserialize(readerBroadcast));
+        }
+
+        mainFrame.updateSessionTable(parties);
     }
 
     public void broadCastActionDispatcher(Integer action) throws IOException {
         if (EnumSocketAction.GET_THEMES.ordinal() == action) {
             get_themes_broadcast();
+        } else if (EnumSocketAction.GET_PARTIES.ordinal() == action) {
+            get_themes_parties_broadcast();
         }
     }
 }

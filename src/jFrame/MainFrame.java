@@ -3,6 +3,7 @@ package jFrame;
 
 import models.Theme;
 import sockets.ClientHandler;
+import sockets.Party;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -51,6 +52,17 @@ public class MainFrame extends javax.swing.JFrame {
         for (Theme theme:
              themes) {
             ((DefaultTableModel) themeTable.getModel()).addRow(new Object[]{theme.getValue(), false});
+        }
+    }
+
+    public void updateSessionTable(List<Party> parties) {
+        DefaultTableModel dm = (DefaultTableModel)sessionTable.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
+
+        for (Party p:
+                parties) {
+            ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKeys().toString(), p.getHowManyQuestions()});
         }
     }
 

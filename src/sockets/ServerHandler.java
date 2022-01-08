@@ -3,7 +3,6 @@ package sockets;
 import Abstracts.ASocketModelSerializable;
 import composite.CompositeThemeSingleton;
 import composite.CompositeUserSingleton;
-import models.Theme;
 import models.User;
 
 import java.io.*;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class ServerHandler implements Runnable {
     public static final List<ServerHandler> serversHandler = new ArrayList<>();
-    public static final List<Party> Parties = new ArrayList<>();
+    public static final List<Party> parties = new ArrayList<>();
 
     private final Socket clientSocket;
     private final BufferedReader reader;
@@ -67,13 +66,32 @@ public class ServerHandler implements Runnable {
             signOut();
         } else if (EnumSocketAction.GET_THEMES.ordinal() == action) {
             getThemes();
+        } else if (EnumSocketAction.ADD_PARTY.ordinal() == action) {
+            add_party();
         }
+    }
+
+    public synchronized void add_party() throws IOException, SQLException {
+        Party p = Party.deserialize(reader);
+
+        if (!CompositeUserSingleton.compositeUserSingleton.get(p.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        parties.add(p);
+        broadcastModelArray(EnumSocketAction.ADD_PARTY, parties);
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
     }
 
     public void getThemes() throws IOException {
         if (me == null) {
             writer.write(0);
-            System.out.println("send 1");
+            System.out.println("send 0");
             writer.flush();
             return;
         }
@@ -87,7 +105,7 @@ public class ServerHandler implements Runnable {
     public synchronized void signOut() throws IOException {
         if (me == null) {
             writer.write(0);
-            System.out.println("send 1");
+            System.out.println("send 0");
             writer.flush();
             return;
         }

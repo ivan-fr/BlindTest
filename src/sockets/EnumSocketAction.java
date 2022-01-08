@@ -4,5 +4,7 @@ public enum EnumSocketAction {
     SIGNIN,
     SIGNUP,
     SIGNOUT,
-    GET_THEMES
+    GET_THEMES,
+    ADD_PARTY,
+    GET_PARTIES
 }

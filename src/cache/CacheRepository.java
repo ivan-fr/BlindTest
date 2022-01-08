@@ -33,7 +33,8 @@ public class CacheRepository<T extends AbstractModel> {
     }
 
     public void update(T oldInstance, T newInstance) {
-        map.replace(newInstance.getKey(), oldInstance, newInstance);
+        map.remove(oldInstance.getKey());
+        map.put(newInstance.getKey(), newInstance);
     }
 
     public List<T> list() {
