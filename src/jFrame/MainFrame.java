@@ -523,7 +523,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel6.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 200, 90));
 
-        jPanel12.setBackground(new java.awt.Color(255, 255, 55));
+        jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
 
