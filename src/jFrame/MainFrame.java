@@ -904,6 +904,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             if (client.join_party(textJoinSession.getText())) {
                 jLabel17.setText(client.getMySession().getPartyName());
+                startButton.setVisible(false);
                 jTabbedPane1.setSelectedIndex(2);
             }
         } catch (IOException e) {
@@ -969,7 +970,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+
         choice1.setText("");
         choice2.setText("");
         choice3.setText("");
@@ -1000,6 +1001,7 @@ public class MainFrame extends javax.swing.JFrame {
             jLabel19.setIcon(scaledIcon);
             break;
         }
+        startButton.setVisible(false);
     }
 
 
