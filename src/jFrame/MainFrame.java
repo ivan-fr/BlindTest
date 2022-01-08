@@ -458,7 +458,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jPanel6.add(startButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 330, 150, -1));
 
-        jPanel10.setBackground(new java.awt.Color(255, 51, 51));
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
 
@@ -490,7 +490,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel6.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 200, 90));
 
-        jPanel11.setBackground(new java.awt.Color(0, 204, 0));
+        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
         user2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user2.setText("User2");
@@ -523,7 +523,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel6.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 200, 90));
 
-        jPanel12.setBackground(new java.awt.Color(0, 204, 0));
+        jPanel12.setBackground(new java.awt.Color(255, 255, 55));
 
         jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
 
@@ -855,10 +855,22 @@ public class MainFrame extends javax.swing.JFrame {
         for (String username:
              party.getParticipants().keySet()) {
             switch (i) {
-                case 0 -> user1.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                case 1 -> user2.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                case 2 -> user3.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                case 3 -> user4.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                case 0 -> {
+                    user1.setText(username + " - SCORE: " + party.getParticipants().get(username).get()) ;
+                    jPanel10.setBackground(new java.awt.Color(167, 183, 255));
+                }
+                case 1 -> {
+                    user2.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                    jPanel11.setBackground(new java.awt.Color(167, 183, 255));
+                }
+                case 2 -> {
+                    user3.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                    jPanel12.setBackground(new java.awt.Color(167, 183, 255));
+                }
+                case 3 -> {
+                    user4.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                    jPanel13.setBackground(new java.awt.Color(167, 183, 255));
+                }
             }
             i++;
         }
@@ -878,6 +890,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void choice3ActionPerformed(java.awt.event.ActionEvent evt) {
         jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+    }
+
+    private void choice4ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
     }
 
     private void joinSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -986,12 +1002,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void choice4ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
 
     private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(3);
     }
 
     // Variables declaration
