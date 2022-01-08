@@ -954,6 +954,11 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        choice1.setText("");
+        choice2.setText("");
+        choice3.setText("");
+        choice4.setText("");
+
         Party party = client.getMySession();
 
         for (Fichier f: party.getQuestions().keySet()) {
@@ -972,7 +977,7 @@ public class MainFrame extends javax.swing.JFrame {
             String path = "/images/"+ f.getName() + "." + f.getExtension();
             System.out.println(path);
 
-            ImageIcon icon = new ImageIcon(getClass().getResource("/images/r3d.png"));
+            ImageIcon icon = new ImageIcon(path);
             Image img = icon.getImage();
             Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
