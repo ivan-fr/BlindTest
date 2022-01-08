@@ -8,6 +8,7 @@ import models.User;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,8 @@ public class ServerHandler implements Runnable {
 
     @Override
     public synchronized void run() {
+        try {
         while (clientSocket.isConnected()) {
-            try {
                 int action = reader.read();
                 if (action == -1) {
                     clientSocket.close();
@@ -51,11 +52,13 @@ public class ServerHandler implements Runnable {
                     break;
                 }
                 actionDispatcher(action);
-            } catch (IOException | SQLException e) {
+            }
+        } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         }
-    }
+
+
 
     public void actionDispatcher(Integer action) throws IOException, SQLException {
         System.out.println("receive action : " + action);
