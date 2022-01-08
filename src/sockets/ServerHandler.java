@@ -175,6 +175,7 @@ public class ServerHandler implements Runnable {
             userExist.serialize(writer, true);
             me = (String) userExist.getKey();
             serversHandler.add(this);
+            broadcastModelArray(EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
             return;
         }
 
