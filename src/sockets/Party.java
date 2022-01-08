@@ -1,6 +1,8 @@
 package sockets;
 
 import Abstracts.ASocketModelSerializable;
+import models.Fichier;
+import models.Reponse;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +17,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private final String partyName;
     private final List<String> themesKey = new ArrayList<>();
     private final HashMap<String, AtomicInteger> participants = new HashMap<>();
+    private final HashMap<Fichier, List<Reponse>> questions = new HashMap<>();
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
@@ -40,8 +43,8 @@ public class Party extends ASocketModelSerializable<Party> {
         return partyName;
     }
 
-    public List<String> getThemesKey() {
-        return themesKey;
+    public HashMap<Fichier, List<Reponse>> getQuestions() {
+        return questions;
     }
 
     public Integer getHowManyQuestions() {
@@ -69,14 +72,24 @@ public class Party extends ASocketModelSerializable<Party> {
         writer.write(currentQuestion.get());
         writer.write(participants.size());
 
-        System.out.println(participants.size());
-        System.out.println("participants");
 
         for (String u:
              participants.keySet()) {
            writer.write(u);
            writer.newLine();
            writer.write(participants.get(u).get());
+        }
+
+        writer.write(questions.size());
+
+        for (Fichier f:
+                questions.keySet()) {
+            f.serialize(writer,false);
+            writer.write(questions.get(f).size());
+            for (Reponse r:
+                 questions.get(f)) {
+                r.serialize(writer, false);
+            }
         }
 
         if (flush) {
@@ -101,7 +114,7 @@ public class Party extends ASocketModelSerializable<Party> {
             party.getThemesKeys().add(themeKey);
         }
 
-        Integer currentQuestion = reader.read();
+        int currentQuestion = reader.read();
         party.currentQuestion.set(currentQuestion);
         int howManyParticipants = reader.read();
 
@@ -111,6 +124,19 @@ public class Party extends ASocketModelSerializable<Party> {
             AtomicInteger aI = new AtomicInteger();
             aI.set(points);
             party.getParticipants().put(userKey, aI);
+        }
+
+        int effectiveNumberQuestion = reader.read();
+        for (int i = 0; i < effectiveNumberQuestion; i++) {
+            Fichier f = Fichier.deserialize(reader);
+            int nbReponses = reader.read();
+            ArrayList<Reponse> reponses = new ArrayList<>();
+
+            for (int j = 0; j < nbReponses; j++) {
+                reponses.add(Reponse.deserialize(reader));
+            }
+
+            party.questions.put(f, reponses);
         }
 
         return party;

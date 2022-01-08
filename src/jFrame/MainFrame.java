@@ -1,6 +1,8 @@
 package jFrame;
 
 
+import models.Fichier;
+import models.Reponse;
 import models.Theme;
 import sockets.ClientHandler;
 import sockets.Party;
@@ -38,11 +40,6 @@ public class MainFrame extends javax.swing.JFrame {
         sessionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableModel = (DefaultTableModel) sessionTable.getModel();
         jTabbedPane1.setSelectedIndex(0);
-        ImageIcon icon = new ImageIcon(getClass().getResource("/images/deadpool.jpg"));
-        Image img = icon.getImage();
-        Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
-        jLabel19.setIcon(scaledIcon); // NOI18N
     }
 
     public void updateThemeTable(List<Theme> themes) {
@@ -957,6 +954,31 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        Party party = client.getMySession();
+
+        for (Fichier f: party.getQuestions().keySet()) {
+            int i = 0;
+            for (Reponse reponse:
+                 party.getQuestions().get(f)) {
+                switch (i) {
+                    case 0 -> choice1.setText(reponse.getValue());
+                    case 1 -> choice2.setText(reponse.getValue());
+                    case 2 -> choice3.setText(reponse.getValue());
+                    case 3 -> choice4.setText(reponse.getValue());
+                }
+                i++;
+            }
+
+            String path = "/images/"+ f.getName() + "." + f.getExtension();
+            System.out.println(path);
+
+            ImageIcon icon = new ImageIcon(getClass().getResource("/images/r3d.png"));
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
+            jLabel19.setIcon(scaledIcon);
+            break;
+        }
     }
 
     private void choice4ActionPerformed(java.awt.event.ActionEvent evt) {

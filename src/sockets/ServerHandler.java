@@ -1,18 +1,21 @@
 package sockets;
 
 import Abstracts.ASocketModelSerializable;
+import composite.CompositeFichierSingleton;
 import composite.CompositeThemeSingleton;
 import composite.CompositeUserSingleton;
+import models.Fichier;
+import models.Reponse;
 import models.User;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ServerHandler implements Runnable {
     public static final List<ServerHandler> serversHandler = new ArrayList<>();
@@ -107,11 +110,52 @@ public class ServerHandler implements Runnable {
     public synchronized void add_party() throws IOException, SQLException {
         Party p = Party.deserialize(reader);
 
+        if (p.getHowManyQuestions() == 0) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
         if (!CompositeUserSingleton.compositeUserSingleton.get(p.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
             return;
+        }
+
+        Random rand = new Random();
+        for (int i = 0; i < p.getHowManyQuestions(); i++) {
+            String randomTheme = p.getThemesKeys().get(rand.nextInt(p.getThemesKeys().size()));
+            Predicate<Fichier> byRandomTheme = fichier -> {
+                try {
+                    return fichier.getTheme().getValue().contentEquals(randomTheme);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            };
+
+            List<Fichier> fichiersByTheme = CompositeFichierSingleton.compositeFichierSingleton
+                    .list()
+                    .stream()
+                    .filter(byRandomTheme)
+                    .collect(Collectors.toList());
+
+            Fichier randomFichier = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
+            List<Reponse> reponses = new ArrayList<>();
+
+            fichiersByTheme.remove(randomFichier);
+            reponses.add(randomFichier.getReponse());
+
+            for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
+                Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
+                reponses.add(randomFichierForTheme.getReponse());
+                fichiersByTheme.remove(randomFichierForTheme);
+            }
+
+            Collections.shuffle(reponses);
+            p.getQuestions().put(randomFichier, reponses);
         }
 
         parties.add(p);
