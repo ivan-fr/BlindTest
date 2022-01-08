@@ -816,6 +816,25 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    public void onUpdateMySessionGame(Party party) {
+        user1.setText("");
+        user2.setText("");
+        user3.setText("");
+        user4.setText("");
+
+        int i = 0;
+        for (String username:
+             party.getParticipants().keySet()) {
+            switch (i) {
+                case 0 -> user1.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                case 1 -> user2.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                case 2 -> user3.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+                case 3 -> user4.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
+            }
+            i++;
+        }
+    }
+
     private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }

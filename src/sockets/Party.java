@@ -69,6 +69,9 @@ public class Party extends ASocketModelSerializable<Party> {
         writer.write(currentQuestion.get());
         writer.write(participants.size());
 
+        System.out.println(participants.size());
+        System.out.println("participants");
+
         for (String u:
              participants.keySet()) {
            writer.write(u);
@@ -118,6 +121,7 @@ public class Party extends ASocketModelSerializable<Party> {
         return "Party{" +
                 "authorKey='" + authorKey + '\'' +
                 ", partyName='" + partyName + '\'' +
+                ", participants='" + participants.size() +
                 '}';
     }
 }

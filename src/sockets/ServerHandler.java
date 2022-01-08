@@ -80,7 +80,7 @@ public class ServerHandler implements Runnable {
         for (Party party:
              parties) {
             if (party.getPartyName().contentEquals(p.getPartyName())) {
-                pSelected = p;
+                pSelected = party;
                 break;
             }
         }

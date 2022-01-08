@@ -127,6 +127,8 @@ public class ClientHandler {
         Party p = new Party("", partyName, 0);
         if (sendAction(EnumSocketAction.JOIN_PARTY, p)) {
             mySession = Party.deserialize(reader);
+            System.out.println(mySession);
+            mainFrame.onUpdateMySessionGame(mySession);
             return true;
         }
 
@@ -156,6 +158,17 @@ public class ClientHandler {
 
         for (int i = 0; i < howManyParties; i++) {
             parties.add(Party.deserialize(readerBroadcast));
+        }
+
+        if (mySession != null) {
+            for (Party party:
+                    parties) {
+                if (party.getPartyName().contentEquals(mySession.getPartyName())) {
+                    mainFrame.onUpdateMySessionGame(party);
+                    mySession = party;
+                    break;
+                }
+            }
         }
 
         mainFrame.updateSessionTable(parties);
