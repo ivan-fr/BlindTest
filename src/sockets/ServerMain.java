@@ -14,14 +14,13 @@ public class ServerMain {
     private final static int PORT = 1500;
     private static ServerSocket serverSocket;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             System.out.println("Mysql implementation is OK.");
         } catch (Exception ex) {
             System.out.println("Mysql implementation error.");
         }
-
 
         try {
             CompositeUserSingleton.compositeUserSingleton.hydrate();
