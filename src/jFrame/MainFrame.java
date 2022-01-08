@@ -444,7 +444,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice1ActionPerformed(evt);
             }
         });
-        jPanel6.add(choice1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, -1, -1));
+        jPanel6.add(choice1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 370, 120, -1));
+
+
 
         choice2.setBackground(new java.awt.Color(117, 153, 148));
         choice2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
@@ -455,7 +457,8 @@ public class MainFrame extends javax.swing.JFrame {
                 choice2ActionPerformed(evt);
             }
         });
-        jPanel6.add(choice2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 370, -1, -1));
+
+        jPanel6.add(choice2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 370, 120, -1));
 
         choice4.setBackground(new java.awt.Color(218, 189, 102));
         choice4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
@@ -466,7 +469,7 @@ public class MainFrame extends javax.swing.JFrame {
                 choice4ActionPerformed(evt);
             }
         });
-        jPanel6.add(choice4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 370, -1, -1));
+        jPanel6.add(choice4, new org.netbeans.lib.awtextra.AbsoluteConstraints(617, 370, 120, -1));
 
         choice3.setBackground(new java.awt.Color(103, 109, 213));
         choice3.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
@@ -477,7 +480,7 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3ActionPerformed(evt);
             }
         });
-        jPanel6.add(choice3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 370, -1, -1));
+        jPanel6.add(choice3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 370, 120, -1));
 
         startButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         startButton.setText("Start");
@@ -903,6 +906,7 @@ public class MainFrame extends javax.swing.JFrame {
                     System.out.println(client.getMe());
                     connectedUsername.setText(client.getMe().getUsername());
                     client.get_themes();
+
                     jTabbedPane1.setSelectedIndex(3);
                 }
             } catch (IOException e) {

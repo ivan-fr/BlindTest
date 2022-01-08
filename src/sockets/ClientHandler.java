@@ -139,6 +139,8 @@ public class ClientHandler {
         return sendAction(EnumSocketAction.GET_THEMES, null);
     }
 
+
+
     private void get_themes_broadcast() throws IOException {
         int howManyThemes = readerBroadcast.read();
 
