@@ -5,6 +5,8 @@ import jFrame.MainFrame;
 import models.Theme;
 import models.User;
 
+import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -36,7 +38,13 @@ public class ClientHandler {
             while (broadCastSocket.isConnected()) {
                 try {
                     int choose = readerBroadcast.read();
-                    System.out.println(choose);
+                    if (choose == -1) {
+                        broadCastSocket.close();
+                        clientSocket.close();
+                        me = null;
+                        mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
+                        break;
+                    }
                     broadCastActionDispatcher(choose);
                 } catch (IOException ignored) {
                 }
@@ -94,15 +102,11 @@ public class ClientHandler {
     private void get_themes_broadcast() throws IOException {
         Integer howManyThemes = readerBroadcast.read();
 
-        System.out.println(howManyThemes);
-
         ArrayList<Theme> themes = new ArrayList<>();
 
         for (int i = 0; i < howManyThemes; i++) {
             themes.add(Theme.deserialize(readerBroadcast));
         }
-
-        System.out.println(themes);
 
         mainFrame.updateThemeTable(themes);
     }
