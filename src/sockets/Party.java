@@ -34,7 +34,6 @@ public class Party extends ASocketModelSerializable<Party> {
     public void startTimer() {
         Timer timer = new Timer(15);
         timerIsRunning = true;
-
         Thread timer1 = new Thread(() -> {
             while (true) {
                 if (!timerIsRunning) {
