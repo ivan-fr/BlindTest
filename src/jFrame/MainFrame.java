@@ -995,11 +995,11 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 i++;
             }
-            //TODO: Images not showing
+
             String path = "/images/"+ f.getName() + "." + f.getExtension();
             System.out.println(path);
 
-            ImageIcon icon = new ImageIcon(path);
+            ImageIcon icon = new ImageIcon(getClass().getResource(path));
             Image img = icon.getImage();
             Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
