@@ -122,6 +122,7 @@ public class ServerHandler implements Runnable {
                     break;
                 }
             }
+            pSelected.stopTimer();
             pSelected.getCurrentQuestionInc();
             pSelected.setLastWinnerQuestion(me);
             try {
@@ -137,7 +138,7 @@ public class ServerHandler implements Runnable {
             return;
         }
 
-        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
@@ -145,7 +146,7 @@ public class ServerHandler implements Runnable {
         next_question_party();
     }
 
-    public synchronized void next_question_party() throws IOException {
+    protected synchronized void next_question_party() throws IOException {
         Party pSelected = selectedParty;
 
         if (pSelected == null) {
@@ -157,17 +158,34 @@ public class ServerHandler implements Runnable {
 
         pSelected.setLastWinnerQuestion(null);
 
-        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
+    }
+
+    protected static synchronized void next_question_party(Party party) throws IOException {
+        if (party == null) {
+            return;
+        }
+
+        party.getCurrentQuestionInc();
+        party.setLastWinnerQuestion(null);
+        try {
+            party.setGoodReponse(party.getFichiersOrder().get(party.getCurrentQuestion() - 1).getReponse());
+        } catch (IndexOutOfBoundsException ignored) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        broadcastModelArray(party, EnumSocketAction.GET_PARTIES, parties);
     }
 
     public synchronized void start_party() throws IOException {
         Party p = Party.deserialize(reader);
         Party pSelected = selectedParty;
 
-        if (pSelected == null) {
+        if (!p.getAuthorKey().contentEquals(selectedParty.getAuthorKey())) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
@@ -176,7 +194,9 @@ public class ServerHandler implements Runnable {
 
         pSelected.getCurrentQuestionInc();
 
-        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
+        selectedParty.startTimer();
+
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
@@ -207,7 +227,7 @@ public class ServerHandler implements Runnable {
         pSelected.getParticipants().put(me, aI);
         selectedParty = pSelected;
 
-        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
         pSelected.serialize(writer, false);
@@ -284,7 +304,7 @@ public class ServerHandler implements Runnable {
         }
 
         parties.add(newParty);
-        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
         newParty.serialize(writer, false);
@@ -299,7 +319,7 @@ public class ServerHandler implements Runnable {
             return;
         }
 
-        broadcastModelArray(EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
+        broadcastModelArray(null, EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
@@ -344,7 +364,7 @@ public class ServerHandler implements Runnable {
             userExist.serialize(writer, true);
             me = (String) userExist.getKey();
             serversHandler.add(this);
-            broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+            broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
             return;
         }
 
@@ -353,22 +373,22 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    private synchronized<T extends ASocketModelSerializable<T>>  void broadcastModel(EnumSocketAction action, T model) throws IOException {
+    protected static synchronized<T extends ASocketModelSerializable<T>>  void broadcastModel(Party selectedPartySource, EnumSocketAction action, T model) throws IOException {
         System.out.println("broadcast model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (runningServer.selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+            if (runningServer.selectedParty == null || (selectedPartySource != null && selectedPartySource.equals(runningServer.selectedParty))) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 model.serialize(runningServer.writerBroadcast, true);
             }
         }
     }
 
-    private synchronized <T extends ASocketModelSerializable<T>> void broadcastModelArray(EnumSocketAction action, List<T> models) throws IOException {
+    private static synchronized <T extends ASocketModelSerializable<T>> void broadcastModelArray(Party selectedPartySource, EnumSocketAction action, List<T> models) throws IOException {
         System.out.println("broadcast array model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (runningServer.selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+            if (runningServer.selectedParty == null || (selectedPartySource != null && selectedPartySource.equals(runningServer.selectedParty))) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 runningServer.writerBroadcast.write(models.size());
                 runningServer.writerBroadcast.flush();

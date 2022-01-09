@@ -11,5 +11,6 @@ public enum EnumSocketAction {
     START_PARTY,
     SEND_PARTY_CHOICE,
     NEXT_QUESTION_PARTY,
-    LEAVE_PARTY
+    LEAVE_PARTY,
+    SEND_TIMER
 }

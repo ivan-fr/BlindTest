@@ -6,6 +6,7 @@ import models.Reponse;
 import models.Theme;
 import sockets.ClientHandler;
 import sockets.Party;
+import sockets.Timer;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -986,6 +987,10 @@ public class MainFrame extends javax.swing.JFrame {
             jLabel19.setVisible(false);
             startButton.setVisible(true);
         }
+    }
+
+    public void updateTimer(Timer timer) {
+        jLabel23.setText(String.valueOf(timer.getSeconds().get()));
     }
 
     private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {

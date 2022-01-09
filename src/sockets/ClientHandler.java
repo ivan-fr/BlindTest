@@ -202,11 +202,21 @@ public class ClientHandler {
         mainFrame.updateSessionTable(parties);
     }
 
+    private void get_timer_broadcast() throws IOException {
+        Timer timer = Timer.deserialize(readerBroadcast);
+
+        if (mySession != null) {
+            mainFrame.updateTimer(timer);
+        }
+    }
+
     public void broadCastActionDispatcher(Integer action) throws IOException {
         if (EnumSocketAction.GET_THEMES.ordinal() == action) {
             get_themes_broadcast();
         } else if (EnumSocketAction.GET_PARTIES.ordinal() == action) {
             get_parties_broadcast();
+        } else if (EnumSocketAction.SEND_TIMER.ordinal() == action) {
+            get_timer_broadcast();
         }
     }
 }

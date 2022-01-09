@@ -22,12 +22,49 @@ public class Party extends ASocketModelSerializable<Party> {
     private Reponse goodReponse;
     private final Integer howManyQuestions;
     private String lastWinnerQuestion;
+    private boolean timerIsRunning = false;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
     public Party(String authorKey, String partyName, Integer howManyQuestions) {
         this.authorKey = authorKey;
         this.partyName = partyName;
         this.howManyQuestions = howManyQuestions;
+    }
+
+    public void startTimer() {
+        Timer timer = new Timer(10);
+        timerIsRunning = true;
+
+        Thread timer1 = new Thread(() -> {
+            while (true) {
+                if (!timerIsRunning) {
+                    break;
+                }
+
+                try {
+                    ServerHandler.broadcastModel(this, EnumSocketAction.SEND_TIMER, timer);
+                    if (timer.getSeconds().decrementAndGet() <= 0) {
+                        if (timerIsRunning) {
+                            ServerHandler.next_question_party(this);
+                        }
+                        break;
+                    }
+                    Thread.sleep(1000);
+                } catch (IOException | InterruptedException e) {
+                    break;
+                }
+            }
+
+            if (this.getHowManyQuestions() > this.currentQuestion.get()) {
+                startTimer();
+            }
+        });
+
+        timer1.start();
+    }
+
+    public void stopTimer() {
+        timerIsRunning = false;
     }
 
     public Integer getCurrentQuestion() {
