@@ -60,8 +60,10 @@ public class MainFrame extends javax.swing.JFrame {
         dm.getDataVector().removeAllElements();
         dm.fireTableDataChanged();
 
+        System.out.println("clear session tab");
         for (Party p:
                 parties) {
+            System.out.println("add row");
             if (p.getCurrentQuestion() == 0 && p.getParticipants().size() < 4) {
                 ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKey().toString(), p.getHowManyQuestions()});
             }
