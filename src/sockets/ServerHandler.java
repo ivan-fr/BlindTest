@@ -260,20 +260,6 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    public void leaveSession() throws IOException {
-        if (me == null) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        selectedParty = null;
-        writer.write(1);
-        System.out.println("send 1");
-        writer.flush();
-    }
-
     public synchronized void send_party_choice() throws IOException, SQLException, InterruptedException {
         Reponse r = Reponse.deserialize(reader);
         Party pSelected = selectedParty;
@@ -322,6 +308,22 @@ public class ServerHandler implements Runnable {
         pSelected.startTimer();
         next_question_party();
     }
+
+    public void leaveSession() throws IOException {
+        if (me == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        selectedParty = null;
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
+    }
+
+
 
     protected synchronized void next_question_party() throws IOException {
         Party pSelected = selectedParty;
