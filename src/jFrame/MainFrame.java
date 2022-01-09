@@ -60,10 +60,8 @@ public class MainFrame extends javax.swing.JFrame {
         dm.getDataVector().removeAllElements();
         dm.fireTableDataChanged();
 
-        System.out.println("clear session tab");
         for (Party p:
                 parties) {
-            System.out.println("add row");
             if (p.getCurrentQuestion() == 0 && p.getParticipants().size() < 4) {
                 ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKey().toString(), p.getHowManyQuestions()});
             }
@@ -890,7 +888,7 @@ public class MainFrame extends javax.swing.JFrame {
                     if (party.getLastWinnerQuestion() != null && username.contentEquals(party.getLastWinnerQuestion())) {
                         jPanel12.setBackground(new java.awt.Color(0, 255, 0));
                     } else {
-                        jPanel13.setBackground(new java.awt.Color(167, 183, 255));
+                        jPanel12.setBackground(new java.awt.Color(167, 183, 255));
                     }
                 }
                 case 3 -> {
