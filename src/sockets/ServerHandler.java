@@ -84,6 +84,128 @@ public class ServerHandler implements Runnable {
         }
     }
 
+    public void signUp() throws IOException, SQLException {
+        User newUser = CompositeUserSingleton.compositeUserSingleton.save(User.deserialize(reader));
+
+        if (newUser == null) {
+            writer.write(0);
+            System.out.println("send 0");
+        } else {
+            writer.write(1);
+            System.out.println("send 1");
+        }
+        writer.flush();
+    }
+
+    public synchronized void signIn() throws IOException, SQLException {
+        User targetFromClient = User.deserialize(reader);
+        User userExist = CompositeUserSingleton.compositeUserSingleton.get((String) targetFromClient.getKey());
+
+        if (userExist != null && targetFromClient.getPassword().contentEquals(userExist.getPassword())) {
+            writer.write(1);
+            userExist.serialize(writer, true);
+            me = (String) userExist.getKey();
+            serversHandler.add(this);
+            broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
+            return;
+        }
+
+        writer.write(0);
+        System.out.println("send 0");
+        writer.flush();
+    }
+
+    public void getThemes() throws IOException {
+        if (me == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        broadcastModelArray(null, EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
+    }
+
+    public synchronized void add_party() throws IOException, SQLException {
+        Party newParty = Party.deserialize(reader);
+
+        if (newParty.getHowManyQuestions() == 0) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        if (!CompositeUserSingleton.compositeUserSingleton.get(newParty.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        Random rand = new Random();
+        boolean first = true;
+        for (int i = 0; i < newParty.getHowManyQuestions(); i++) {
+            String randomTheme = newParty.getThemesKey().get(rand.nextInt(newParty.getThemesKey().size()));
+            Predicate<Fichier> byRandomTheme = fichier -> {
+                try {
+                    return fichier.getTheme().getValue().contentEquals(randomTheme) && !newParty.getFichiersOrder().contains(fichier);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            };
+
+            List<Fichier> fichiersByTheme = CompositeFichierSingleton.compositeFichierSingleton
+                    .list()
+                    .stream()
+                    .filter(byRandomTheme)
+                    .collect(Collectors.toList());
+
+            if (fichiersByTheme.size() == 0) {
+                continue;
+            }
+
+            Fichier randomFichier = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
+            List<Reponse> reponses = new ArrayList<>();
+
+            fichiersByTheme.remove(randomFichier);
+            reponses.add(randomFichier.getReponse());
+
+            if (first) {
+                newParty.setGoodReponse(randomFichier.getReponse());
+                first = false;
+            }
+
+            for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
+                Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
+                reponses.add(randomFichierForTheme.getReponse());
+                fichiersByTheme.remove(randomFichierForTheme);
+            }
+
+            Collections.shuffle(reponses);
+            newParty.getFichiersOrder().add(randomFichier);
+            newParty.getQuestions().put(randomFichier, reponses);
+        }
+
+        if (newParty.getQuestions().size() == 0) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        parties.add(newParty);
+        broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
+        writer.write(1);
+        System.out.println("send 1");
+        newParty.serialize(writer, false);
+        writer.flush();
+    }
+
     public void leaveSession() throws IOException {
         if (me == null) {
             writer.write(0);
@@ -235,96 +357,6 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    public synchronized void add_party() throws IOException, SQLException {
-        Party newParty = Party.deserialize(reader);
-
-        if (newParty.getHowManyQuestions() == 0) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        if (!CompositeUserSingleton.compositeUserSingleton.get(newParty.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        Random rand = new Random();
-        boolean first = true;
-        for (int i = 0; i < newParty.getHowManyQuestions(); i++) {
-            String randomTheme = newParty.getThemesKey().get(rand.nextInt(newParty.getThemesKey().size()));
-            Predicate<Fichier> byRandomTheme = fichier -> {
-                try {
-                    return fichier.getTheme().getValue().contentEquals(randomTheme) && !newParty.getFichiersOrder().contains(fichier);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return false;
-            };
-
-            List<Fichier> fichiersByTheme = CompositeFichierSingleton.compositeFichierSingleton
-                    .list()
-                    .stream()
-                    .filter(byRandomTheme)
-                    .collect(Collectors.toList());
-
-            if (fichiersByTheme.size() == 0) {
-                continue;
-            }
-
-            Fichier randomFichier = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
-            List<Reponse> reponses = new ArrayList<>();
-
-            fichiersByTheme.remove(randomFichier);
-            reponses.add(randomFichier.getReponse());
-
-            if (first) {
-                newParty.setGoodReponse(randomFichier.getReponse());
-                first = false;
-            }
-
-            for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
-                Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
-                reponses.add(randomFichierForTheme.getReponse());
-                fichiersByTheme.remove(randomFichierForTheme);
-            }
-
-            Collections.shuffle(reponses);
-            newParty.getFichiersOrder().add(randomFichier);
-            newParty.getQuestions().put(randomFichier, reponses);
-        }
-
-        if (newParty.getQuestions().size() == 0) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        parties.add(newParty);
-        broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
-        writer.write(1);
-        System.out.println("send 1");
-        newParty.serialize(writer, false);
-        writer.flush();
-    }
-
-    public void getThemes() throws IOException {
-        if (me == null) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        broadcastModelArray(null, EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
-        writer.write(1);
-        System.out.println("send 1");
-        writer.flush();
-    }
 
     public synchronized void signOut() throws IOException {
         if (me == null) {
@@ -343,36 +375,7 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-    public void signUp() throws IOException, SQLException {
-        User newUser = CompositeUserSingleton.compositeUserSingleton.save(User.deserialize(reader));
 
-        if (newUser == null) {
-            writer.write(0);
-            System.out.println("send 0");
-        } else {
-            writer.write(1);
-            System.out.println("send 1");
-        }
-        writer.flush();
-    }
-
-    public synchronized void signIn() throws IOException, SQLException {
-        User targetFromClient = User.deserialize(reader);
-        User userExist = CompositeUserSingleton.compositeUserSingleton.get((String) targetFromClient.getKey());
-
-        if (userExist != null && targetFromClient.getPassword().contentEquals(userExist.getPassword())) {
-            writer.write(1);
-            userExist.serialize(writer, true);
-            me = (String) userExist.getKey();
-            serversHandler.add(this);
-            broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
-            return;
-        }
-
-        writer.write(0);
-        System.out.println("send 0");
-        writer.flush();
-    }
 
     protected static synchronized<T extends ASocketModelSerializable<T>>  void broadcastModel(Party selectedPartySource, EnumSocketAction action, T model) throws IOException {
         System.out.println("broadcast model process");
