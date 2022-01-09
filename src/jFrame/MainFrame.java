@@ -881,19 +881,22 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void choice2ActionPerformed(java.awt.event.ActionEvent evt) {
-        jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+        String response = choice2.getText();
+        //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
     }
 
     private void choice1ActionPerformed(java.awt.event.ActionEvent evt) {
-        jPanel14.setBackground(new java.awt.Color(94, 191, 96));
+        String response = choice1.getText();
+        //jPanel14.setBackground(new java.awt.Color(94, 191, 96));
     }
 
     private void choice3ActionPerformed(java.awt.event.ActionEvent evt) {
-        jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+        String response = choice3.getText();
+        //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
     }
 
     private void choice4ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        String response = choice4.getText();
     }
 
     private void joinSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
