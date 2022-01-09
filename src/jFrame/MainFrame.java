@@ -594,7 +594,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel14.setBackground(new java.awt.Color(253, 253, 253));
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel23.setText("22");
+        jLabel23.setText("");
 
         jLabel32.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel32.setText("Time left:");
