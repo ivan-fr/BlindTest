@@ -357,7 +357,7 @@ public class ServerHandler implements Runnable {
         System.out.println("broadcast model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+            if (runningServer.selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 model.serialize(runningServer.writerBroadcast, true);
             }
@@ -368,7 +368,7 @@ public class ServerHandler implements Runnable {
         System.out.println("broadcast array model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
+            if (runningServer.selectedParty == null || (selectedParty != null && selectedParty.equals(runningServer.selectedParty))) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 runningServer.writerBroadcast.write(models.size());
                 runningServer.writerBroadcast.flush();
