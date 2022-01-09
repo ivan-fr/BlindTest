@@ -157,7 +157,7 @@ public class ServerHandler implements Runnable {
         Party pSelected = null;
         for (Party party:
              parties) {
-            if (party.getPartyName().contentEquals(p.getPartyName())) {
+            if (party.getPartyName().contentEquals(p.getPartyName()) && party.getCurrentQuestion() == 0) {
                 pSelected = party;
                 break;
             }
