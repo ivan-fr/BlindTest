@@ -44,10 +44,11 @@ public class Party extends ASocketModelSerializable<Party> {
             return;
         }
 
-        if (participant.contentEquals("")) {
+        if (participant.length() == 0) {
             lastWinnerQuestion = null;
             return;
         }
+
         lastWinnerQuestion = participant;
     }
 
