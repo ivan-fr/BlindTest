@@ -996,6 +996,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3.setVisible(false);
                 choice4.setVisible(false);
                 jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+            } else {
+                jPanel14.setBackground(new java.awt.Color(94, 191, 96));
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -1010,6 +1013,8 @@ public class MainFrame extends javax.swing.JFrame {
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+            } else {
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
@@ -1025,6 +1030,8 @@ public class MainFrame extends javax.swing.JFrame {
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+            } else {
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
@@ -1040,6 +1047,8 @@ public class MainFrame extends javax.swing.JFrame {
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+            } else {
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
