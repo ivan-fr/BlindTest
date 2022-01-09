@@ -110,10 +110,13 @@ public class ClientHandler {
             return false;
         }
 
+        mySession = null;
         Party p = new Party(me.getUsername(), partyName, howManyQuestions);
         p.getThemesKeys().addAll(themes);
 
         if (sendAction(EnumSocketAction.ADD_PARTY, p)) {
+            mySession = Party.deserialize(reader);
+            mainFrame.onUpdateMySessionGame(mySession);
             return join_party(partyName);
         }
 
@@ -125,10 +128,10 @@ public class ClientHandler {
             return false;
         }
 
+        mySession = null;
         Party p = new Party("", partyName, 0);
         if (sendAction(EnumSocketAction.JOIN_PARTY, p)) {
             mySession = Party.deserialize(reader);
-            System.out.println(mySession);
             mainFrame.onUpdateMySessionGame(mySession);
             return true;
         }

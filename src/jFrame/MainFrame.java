@@ -1,6 +1,7 @@
 package jFrame;
 
 
+import models.Fichier;
 import models.Reponse;
 import models.Theme;
 import sockets.ClientHandler;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -886,33 +889,51 @@ public class MainFrame extends javax.swing.JFrame {
         choice4.setText("");
 
         if (party.getCurrentQuestion() == 0) {
+            choice1.setVisible(false);
+            choice2.setVisible(false);
+            choice3.setVisible(false);
+            choice4.setVisible(false);
             return;
         }
 
-        choice1.setVisible(true);
-        choice2.setVisible(true);
-        choice3.setVisible(true);
-        choice4.setVisible(true);
+        try {
+            Predicate<Fichier> predicate = fichier -> ((int) fichier.getKey()) == ((int) party.getFichiersOrder().get(party.getCurrentQuestion() - 1).getKey());
+            Optional<Fichier> currentFichierQuestion = party.getQuestions().keySet().stream().filter(predicate).findFirst();
 
-        // Broadcast this to all players
-        i = 0;
-        for (Reponse reponse:
-                party.getQuestions().get(party.getFichiersOrder().get(party.getCurrentQuestion()))) {
-            switch (i) {
-                case 0 -> choice1.setText(reponse.getValue());
-                case 1 -> choice2.setText(reponse.getValue());
-                case 2 -> choice3.setText(reponse.getValue());
-                case 3 -> choice4.setText(reponse.getValue());
+            if (currentFichierQuestion.isEmpty()) {
+                System.out.println("no files!");
+                return;
             }
-            i++;
-        }
 
-        String path = "/images/"+ party.getFichiersOrder().get(party.getCurrentQuestion()).getName() + "." + party.getFichiersOrder().get(party.getCurrentQuestion()).getExtension();
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        Image img = icon.getImage();
-        Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
-        jLabel19.setIcon(scaledIcon);
+            i = 0;
+            for (Reponse reponse:
+                    party.getQuestions().get(currentFichierQuestion.get())) {
+                switch (i) {
+                    case 0 -> choice1.setText(reponse.getValue());
+                    case 1 -> choice2.setText(reponse.getValue());
+                    case 2 -> choice3.setText(reponse.getValue());
+                    case 3 -> choice4.setText(reponse.getValue());
+                }
+                i++;
+            }
+
+            String path = "/images/"+ currentFichierQuestion.get().getName() + "." + currentFichierQuestion.get().getExtension();
+            ImageIcon icon = new ImageIcon(getClass().getResource(path));
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
+            jLabel19.setIcon(scaledIcon);
+
+            jLabel19.setVisible(true);
+            choice1.setVisible(true);
+            choice2.setVisible(true);
+            choice3.setVisible(true);
+            choice4.setVisible(true);
+        } catch (IndexOutOfBoundsException e) {
+            jTabbedPane1.setSelectedIndex(4);
+            jLabel19.setVisible(false);
+            startButton.setVisible(true);
+        }
     }
 
     private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {

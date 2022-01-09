@@ -22,6 +22,15 @@ public class Fichier extends AbstractModel {
         this.getManyToOneReferences().put("theme", theme);
     }
 
+    public Fichier(String name, String extension, String type, String theme, String reponse, Integer key) {
+        this.name = name;
+        this.extension = extension;
+        this.type = type;
+        this.getOneToOneReferences().put("reponse", reponse);
+        this.getManyToOneReferences().put("theme", theme);
+        setKey(key);
+    }
+
     public String getType() {
         return type;
     }
@@ -65,12 +74,14 @@ public class Fichier extends AbstractModel {
         writer.write((String) this.getOneToOneReferences().get("reponse"));
         writer.newLine();
 
+        writer.write((Integer) getKey());
+
         if (flush) {
             writer.flush();
         }
     }
 
     public static Fichier deserialize(BufferedReader reader) throws IOException {
-        return new Fichier(reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine());
+        return new Fichier(reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine(), reader.read());
     }
 }

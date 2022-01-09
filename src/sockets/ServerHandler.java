@@ -218,7 +218,6 @@ public class ServerHandler implements Runnable {
             }
 
             Fichier randomFichier = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
-            p.getFichiersOrder().add(randomFichier);
             List<Reponse> reponses = new ArrayList<>();
 
             fichiersByTheme.remove(randomFichier);
@@ -232,13 +231,25 @@ public class ServerHandler implements Runnable {
             }
 
             Collections.shuffle(reponses);
-            p.getQuestions().put(randomFichier, reponses);
+
+            if (reponses.size() > 0) {
+                p.getFichiersOrder().add(randomFichier);
+                p.getQuestions().put(randomFichier, reponses);
+            }
+        }
+
+        if (p.getQuestions().size() == 0) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
         }
 
         parties.add(p);
         broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
+        p.serialize(writer, false);
         writer.flush();
     }
 
