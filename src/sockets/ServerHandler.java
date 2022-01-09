@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class ServerHandler implements Runnable {
     public static final List<ServerHandler> serversHandler = new ArrayList<>();
-    public static final List<Party> parties = new ArrayList<>();
+    public static List<Party> parties = new ArrayList<>();
 
     private final Socket clientSocket;
     private final BufferedReader reader;
@@ -183,12 +183,14 @@ public class ServerHandler implements Runnable {
     }
 
     public synchronized void join_party() throws IOException {
-        Party p = Party.deserialize(reader);
+        Party partyJoin = Party.deserialize(reader);
         Party pSelected = null;
         for (Party party:
              parties) {
-            if (party.getPartyName().contentEquals(p.getPartyName()) && party.getCurrentQuestion() == 0) {
+            if (party.getPartyName().contentEquals(partyJoin.getPartyName()) && party.getCurrentQuestion() == 0) {
                 pSelected = party;
+                Predicate<Party> predicate = party1 -> !(party1.getCurrentQuestion() > 0 && party1.getPartyName().contentEquals(partyJoin.getPartyName()));
+                parties = parties.stream().filter(predicate).collect(Collectors.toList());
                 break;
             }
         }
@@ -213,16 +215,16 @@ public class ServerHandler implements Runnable {
     }
 
     public synchronized void add_party() throws IOException, SQLException {
-        Party p = Party.deserialize(reader);
+        Party newParty = Party.deserialize(reader);
 
-        if (p.getHowManyQuestions() == 0) {
+        if (newParty.getHowManyQuestions() == 0) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
             return;
         }
 
-        if (!CompositeUserSingleton.compositeUserSingleton.get(p.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
+        if (!CompositeUserSingleton.compositeUserSingleton.get(newParty.getAuthorKey()).equals(CompositeUserSingleton.compositeUserSingleton.get(me))) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
@@ -231,11 +233,11 @@ public class ServerHandler implements Runnable {
 
         Random rand = new Random();
         boolean first = true;
-        for (int i = 0; i < p.getHowManyQuestions(); i++) {
-            String randomTheme = p.getThemesKey().get(rand.nextInt(p.getThemesKey().size()));
+        for (int i = 0; i < newParty.getHowManyQuestions(); i++) {
+            String randomTheme = newParty.getThemesKey().get(rand.nextInt(newParty.getThemesKey().size()));
             Predicate<Fichier> byRandomTheme = fichier -> {
                 try {
-                    return fichier.getTheme().getValue().contentEquals(randomTheme) && !p.getFichiersOrder().contains(fichier);
+                    return fichier.getTheme().getValue().contentEquals(randomTheme) && !newParty.getFichiersOrder().contains(fichier);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -259,7 +261,7 @@ public class ServerHandler implements Runnable {
             reponses.add(randomFichier.getReponse());
 
             if (first) {
-                p.setGoodReponse(randomFichier.getReponse());
+                newParty.setGoodReponse(randomFichier.getReponse());
                 first = false;
             }
 
@@ -270,22 +272,22 @@ public class ServerHandler implements Runnable {
             }
 
             Collections.shuffle(reponses);
-            p.getFichiersOrder().add(randomFichier);
-            p.getQuestions().put(randomFichier, reponses);
+            newParty.getFichiersOrder().add(randomFichier);
+            newParty.getQuestions().put(randomFichier, reponses);
         }
 
-        if (p.getQuestions().size() == 0) {
+        if (newParty.getQuestions().size() == 0) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
             return;
         }
 
-        parties.add(p);
+        parties.add(newParty);
         broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
         System.out.println("send 1");
-        p.serialize(writer, false);
+        newParty.serialize(writer, false);
         writer.flush();
     }
 

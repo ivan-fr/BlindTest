@@ -177,7 +177,6 @@ public class ClientHandler {
         for (int i = 0; i < howManyThemes; i++) {
             themes.add(Theme.deserialize(readerBroadcast));
         }
-
         mainFrame.updateThemeTable(themes);
     }
 
