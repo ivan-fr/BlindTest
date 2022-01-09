@@ -33,11 +33,20 @@ public class Party extends ASocketModelSerializable<Party> {
     public Integer getCurrentQuestion() {
         return currentQuestion.get();
     }
+
     public Integer getCurrentQuestionInc() {
         return currentQuestion.incrementAndGet();
     }
 
-    public List<String> getThemesKeys() {
+    public void setLastWinnerQuestion(String participant) {
+        lastWinnerQuestion = participant;
+    }
+
+    public String getLastWinnerQuestion() {
+        return lastWinnerQuestion;
+    }
+
+    public List<String> getThemesKey() {
         return themesKey;
     }
 
@@ -124,6 +133,9 @@ public class Party extends ASocketModelSerializable<Party> {
             f.serialize(writer, false);
         }
 
+        writer.write(getLastWinnerQuestion());
+        writer.newLine();
+
         if (flush) {
             writer.flush();
         }
@@ -143,7 +155,7 @@ public class Party extends ASocketModelSerializable<Party> {
 
         for (int i = 0; i < howManyThemes; i++) {
             String themeKey = reader.readLine();
-            party.getThemesKeys().add(themeKey);
+            party.getThemesKey().add(themeKey);
         }
 
         int currentQuestion = reader.read();
@@ -178,6 +190,8 @@ public class Party extends ASocketModelSerializable<Party> {
         for (int i = 0; i < sizeFichiersOrder; i++) {
             party.getFichiersOrder().add(Fichier.deserialize(reader));
         }
+
+        party.setLastWinnerQuestion(reader.readLine());
 
         return party;
     }

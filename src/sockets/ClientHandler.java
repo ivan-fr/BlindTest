@@ -112,7 +112,7 @@ public class ClientHandler {
 
         mySession = null;
         Party p = new Party(me.getUsername(), partyName, howManyQuestions);
-        p.getThemesKeys().addAll(themes);
+        p.getThemesKey().addAll(themes);
 
         if (sendAction(EnumSocketAction.ADD_PARTY, p)) {
             mySession = Party.deserialize(reader);

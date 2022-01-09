@@ -63,7 +63,7 @@ public class MainFrame extends javax.swing.JFrame {
         for (Party p:
                 parties) {
             if (p.getCurrentQuestion() == 0 && p.getParticipants().size() < 4) {
-                ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKeys().toString(), p.getHowManyQuestions()});
+                ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKey().toString(), p.getHowManyQuestions()});
             }
         }
     }
@@ -865,22 +865,48 @@ public class MainFrame extends javax.swing.JFrame {
             switch (i) {
                 case 0 -> {
                     user1.setText(username + " - SCORE: " + party.getParticipants().get(username).get()) ;
-                    jPanel10.setBackground(new java.awt.Color(167, 183, 255));
+                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                        jPanel10.setBackground(new java.awt.Color(0, 255, 0));
+                    } else {
+                        jPanel10.setBackground(new java.awt.Color(167, 183, 255));
+                    }
                 }
                 case 1 -> {
                     user2.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    jPanel11.setBackground(new java.awt.Color(167, 183, 255));
+                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                        jPanel11.setBackground(new java.awt.Color(0, 255, 0));
+                    } else {
+                        jPanel11.setBackground(new java.awt.Color(167, 183, 255));
+                    }
                 }
                 case 2 -> {
                     user3.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    jPanel12.setBackground(new java.awt.Color(167, 183, 255));
+                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                        jPanel12.setBackground(new java.awt.Color(0, 255, 0));
+                    } else {
+                        jPanel13.setBackground(new java.awt.Color(167, 183, 255));
+                    }
                 }
                 case 3 -> {
                     user4.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    jPanel13.setBackground(new java.awt.Color(167, 183, 255));
+                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                        jPanel13.setBackground(new java.awt.Color(0, 255, 0));
+                    } else {
+                        jPanel13.setBackground(new java.awt.Color(167, 183, 255));
+                    }
                 }
             }
             i++;
+        }
+
+        if (party.getLastWinnerQuestion() != null) {
+            choice1.setVisible(false);
+            choice2.setVisible(false);
+            choice3.setVisible(false);
+            choice4.setVisible(false);
+            return;
+        } else {
+            jPanel14.setBackground(new java.awt.Color(253, 253, 253));
         }
 
         choice1.setText("");
@@ -959,13 +985,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void choice2ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice2.getText();
-        //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
         try {
             if (!client.send_party_choice(new Reponse(response))) {
                 choice1.setVisible(false);
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(255, 70, 70));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -974,13 +1000,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void choice1ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice1.getText();
-        //jPanel14.setBackground(new java.awt.Color(94, 191, 96));
         try {
             if (!client.send_party_choice(new Reponse(response))) {
                 choice1.setVisible(false);
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -989,13 +1015,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void choice3ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice3.getText();
-        //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
         try {
             if (!client.send_party_choice(new Reponse(response))) {
                 choice1.setVisible(false);
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -1010,6 +1036,7 @@ public class MainFrame extends javax.swing.JFrame {
                 choice2.setVisible(false);
                 choice3.setVisible(false);
                 choice4.setVisible(false);
+                jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
             e.printStackTrace();

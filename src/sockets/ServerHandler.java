@@ -56,12 +56,12 @@ public class ServerHandler implements Runnable {
                 }
                 actionDispatcher(action);
             }
-        } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-    public void actionDispatcher(Integer action) throws IOException, SQLException {
+    public void actionDispatcher(Integer action) throws IOException, SQLException, InterruptedException {
         System.out.println("receive action : " + action);
         if (EnumSocketAction.SIGNUP.ordinal() == action) {
             signUp();
@@ -82,7 +82,7 @@ public class ServerHandler implements Runnable {
         }
     }
 
-    public synchronized void send_party_choice() throws IOException, SQLException {
+    public synchronized void send_party_choice() throws IOException, SQLException, InterruptedException {
         Reponse r = Reponse.deserialize(reader);
         Party pSelected = null;
         for (Party party:
@@ -94,6 +94,11 @@ public class ServerHandler implements Runnable {
         }
 
         if (pSelected == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        } else if (pSelected.getLastWinnerQuestion() != null) {
             writer.write(0);
             System.out.println("send 0");
             writer.flush();
@@ -111,6 +116,7 @@ public class ServerHandler implements Runnable {
             pSelected.getCurrentQuestionInc();
             try {
                 pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
+                pSelected.setLastWinnerQuestion(me);
             } catch (IndexOutOfBoundsException ignored) {
             }
         } else {
@@ -119,6 +125,33 @@ public class ServerHandler implements Runnable {
             writer.flush();
             return;
         }
+
+        broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
+        Thread.sleep(4000);
+        next_question_party();
+    }
+
+    public synchronized void next_question_party() throws IOException {
+        Party pSelected = null;
+        for (Party party:
+                parties) {
+            if (party.getPartyName().contentEquals(selectedParty.getPartyName())) {
+                pSelected = party;
+                break;
+            }
+        }
+
+        if (pSelected == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        pSelected.setLastWinnerQuestion(null);
 
         broadcastModelArray(EnumSocketAction.GET_PARTIES, parties);
         writer.write(1);
@@ -201,7 +234,7 @@ public class ServerHandler implements Runnable {
 
         Random rand = new Random();
         for (int i = 0; i < p.getHowManyQuestions(); i++) {
-            String randomTheme = p.getThemesKeys().get(rand.nextInt(p.getThemesKeys().size()));
+            String randomTheme = p.getThemesKey().get(rand.nextInt(p.getThemesKey().size()));
             Predicate<Fichier> byRandomTheme = fichier -> {
                 try {
                     return fichier.getTheme().getValue().contentEquals(randomTheme) && !p.getFichiersOrder().contains(fichier);
