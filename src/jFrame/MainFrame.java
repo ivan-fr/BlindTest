@@ -954,7 +954,8 @@ public class MainFrame extends javax.swing.JFrame {
                 Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
                 jLabel19.setIcon(scaledIcon);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             jLabel19.setVisible(true);
