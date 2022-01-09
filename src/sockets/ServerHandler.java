@@ -109,7 +109,10 @@ public class ServerHandler implements Runnable {
                 }
             }
             pSelected.getCurrentQuestionInc();
-            pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
+            try {
+                pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
+            } catch (IndexOutOfBoundsException ignored) {
+            }
         } else {
             writer.write(0);
             System.out.println("send 0");

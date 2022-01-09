@@ -940,10 +940,10 @@ public class MainFrame extends javax.swing.JFrame {
             for (String participant:
                  party.getParticipants().keySet()) {
                 switch (j) {
-                    case 0 -> score1.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
-                    case 1 -> score2.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
-                    case 2 -> score3.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
-                    case 3 -> score4.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
+                    case 0 -> score1.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
+                    case 1 -> score2.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
+                    case 2 -> score3.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
+                    case 3 -> score4.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
                 }
                 j++;
             }
