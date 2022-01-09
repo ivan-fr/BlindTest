@@ -114,12 +114,11 @@ public class ServerHandler implements Runnable {
                 }
             }
             pSelected.getCurrentQuestionInc();
+            pSelected.setLastWinnerQuestion(me);
             try {
                 pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
             } catch (IndexOutOfBoundsException ignored) {
             }
-
-            pSelected.setLastWinnerQuestion(me);
         } else {
             writer.write(0);
             System.out.println("send 0");

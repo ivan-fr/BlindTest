@@ -39,6 +39,11 @@ public class Party extends ASocketModelSerializable<Party> {
     }
 
     public void setLastWinnerQuestion(String participant) {
+        if (participant == null) {
+            lastWinnerQuestion = null;
+            return;
+        }
+
         if (participant.contentEquals("")) {
             lastWinnerQuestion = null;
             return;
