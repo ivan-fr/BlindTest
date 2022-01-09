@@ -252,7 +252,10 @@ public class ServerHandler implements Runnable {
         pSelected.getCurrentQuestionInc();
 
         broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
-        selectedParty.startTimer();
+
+        if (pSelected.getParticipants().size() > 1) {
+            selectedParty.startTimer();
+        }
 
         writer.write(1);
         System.out.println("send 1");
@@ -296,6 +299,18 @@ public class ServerHandler implements Runnable {
             System.out.println("send 0");
             writer.write(0);
             writer.flush();
+
+            broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
+
+            if (pSelected.getParticipants().size() == 1) {
+                pSelected.getCurrentQuestionInc();
+                try {
+                    pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
+                } catch (IndexOutOfBoundsException ignored) {
+                }
+                Thread.sleep(4000);
+                next_question_party();
+            }
             return;
         }
 
