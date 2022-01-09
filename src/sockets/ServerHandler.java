@@ -235,6 +235,7 @@ public class ServerHandler implements Runnable {
         }
 
         Random rand = new Random();
+        boolean first = true;
         for (int i = 0; i < p.getHowManyQuestions(); i++) {
             String randomTheme = p.getThemesKey().get(rand.nextInt(p.getThemesKey().size()));
             Predicate<Fichier> byRandomTheme = fichier -> {
@@ -261,7 +262,11 @@ public class ServerHandler implements Runnable {
 
             fichiersByTheme.remove(randomFichier);
             reponses.add(randomFichier.getReponse());
-            p.setGoodReponse(randomFichier.getReponse());
+
+            if (first) {
+                p.setGoodReponse(randomFichier.getReponse());
+                first = false;
+            }
 
             for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
                 Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
