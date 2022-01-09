@@ -57,7 +57,7 @@ public class ServerHandler implements Runnable {
                 actionDispatcher(action);
             }
         } catch (IOException | SQLException | InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Lost connection..");
             }
         }
 
