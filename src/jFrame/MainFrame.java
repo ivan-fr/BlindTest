@@ -965,6 +965,10 @@ public class MainFrame extends javax.swing.JFrame {
             choice3.setVisible(true);
             choice4.setVisible(true);
         } catch (IndexOutOfBoundsException e) {
+            if (party.getCurrentQuestion() == 0) {
+                return;
+            }
+
             jTabbedPane1.setSelectedIndex(4);
 
             int j = 0;
