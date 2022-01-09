@@ -16,6 +16,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private final String authorKey;
     private final String partyName;
     private final List<String> themesKey = new ArrayList<>();
+    private final int PARTY_TIMER = 15;
     private final HashMap<String, AtomicInteger> participants = new HashMap<>();
     private final HashMap<Fichier, List<Reponse>> questions = new HashMap<>();
     private final List<Fichier> fichiersOrder = new ArrayList<>();
@@ -32,7 +33,7 @@ public class Party extends ASocketModelSerializable<Party> {
     }
 
     public void startTimer() {
-        Timer timer = new Timer(15);
+        Timer timer = new Timer(PARTY_TIMER);
         timerIsRunning = true;
         Thread timer1 = new Thread(() -> {
             while (true) {
