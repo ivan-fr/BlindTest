@@ -116,9 +116,10 @@ public class ServerHandler implements Runnable {
             pSelected.getCurrentQuestionInc();
             try {
                 pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
-                pSelected.setLastWinnerQuestion(me);
             } catch (IndexOutOfBoundsException ignored) {
             }
+
+            pSelected.setLastWinnerQuestion(me);
         } else {
             writer.write(0);
             System.out.println("send 0");

@@ -39,6 +39,10 @@ public class Party extends ASocketModelSerializable<Party> {
     }
 
     public void setLastWinnerQuestion(String participant) {
+        if (participant.contentEquals("")) {
+            lastWinnerQuestion = null;
+            return;
+        }
         lastWinnerQuestion = participant;
     }
 
@@ -133,8 +137,13 @@ public class Party extends ASocketModelSerializable<Party> {
             f.serialize(writer, false);
         }
 
-        writer.write(getLastWinnerQuestion());
-        writer.newLine();
+        if (getLastWinnerQuestion() == null) {
+            writer.write("");
+            writer.newLine();
+        } else {
+            writer.write(getLastWinnerQuestion());
+            writer.newLine();
+        }
 
         if (flush) {
             writer.flush();

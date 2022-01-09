@@ -850,6 +850,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void onUpdateMySessionGame(Party party) {
+        System.out.println(party.getLastWinnerQuestion());
+        System.out.println("winner question");
+
         if (!party.getAuthorKey().contentEquals((String) client.getMe().getKey()) || party.getCurrentQuestion() > 0) {
             startButton.setVisible(false);
         }
@@ -865,7 +868,7 @@ public class MainFrame extends javax.swing.JFrame {
             switch (i) {
                 case 0 -> {
                     user1.setText(username + " - SCORE: " + party.getParticipants().get(username).get()) ;
-                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                    if (party.getLastWinnerQuestion() != null && username.contentEquals(party.getLastWinnerQuestion())) {
                         jPanel10.setBackground(new java.awt.Color(0, 255, 0));
                     } else {
                         jPanel10.setBackground(new java.awt.Color(167, 183, 255));
@@ -873,7 +876,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 case 1 -> {
                     user2.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                    if (party.getLastWinnerQuestion() != null && username.contentEquals(party.getLastWinnerQuestion())) {
                         jPanel11.setBackground(new java.awt.Color(0, 255, 0));
                     } else {
                         jPanel11.setBackground(new java.awt.Color(167, 183, 255));
@@ -881,7 +884,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 case 2 -> {
                     user3.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                    if (party.getLastWinnerQuestion() != null && username.contentEquals(party.getLastWinnerQuestion())) {
                         jPanel12.setBackground(new java.awt.Color(0, 255, 0));
                     } else {
                         jPanel13.setBackground(new java.awt.Color(167, 183, 255));
@@ -889,7 +892,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 case 3 -> {
                     user4.setText(username + " - SCORE: " + party.getParticipants().get(username).get());
-                    if (username.contentEquals(party.getLastWinnerQuestion())) {
+                    if (party.getLastWinnerQuestion() != null && username.contentEquals(party.getLastWinnerQuestion())) {
                         jPanel13.setBackground(new java.awt.Color(0, 255, 0));
                     } else {
                         jPanel13.setBackground(new java.awt.Color(167, 183, 255));
