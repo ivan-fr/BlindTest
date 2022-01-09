@@ -981,6 +981,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         Party party = client.getMySession();
 
+        // Broadcast this to all players
+
         for (Fichier f: party.getQuestions().keySet()) {
             int i = 0;
             for (Reponse reponse:
@@ -993,7 +995,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 i++;
             }
-
+            //TODO: Images not showing
             String path = "/images/"+ f.getName() + "." + f.getExtension();
             System.out.println(path);
 
