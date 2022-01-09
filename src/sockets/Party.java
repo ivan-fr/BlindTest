@@ -21,6 +21,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private final List<Fichier> fichiersOrder = new ArrayList<>();
     private Reponse goodReponse;
     private final Integer howManyQuestions;
+    private String lastWinnerQuestion;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
     public Party(String authorKey, String partyName, Integer howManyQuestions) {

@@ -82,7 +82,7 @@ public class ServerHandler implements Runnable {
         }
     }
 
-    public synchronized void send_party_choice() throws IOException {
+    public synchronized void send_party_choice() throws IOException, SQLException {
         Reponse r = Reponse.deserialize(reader);
         Party pSelected = null;
         for (Party party:
@@ -109,6 +109,7 @@ public class ServerHandler implements Runnable {
                 }
             }
             pSelected.getCurrentQuestionInc();
+            pSelected.setGoodReponse(pSelected.getFichiersOrder().get(pSelected.getCurrentQuestion() - 1).getReponse());
         } else {
             writer.write(0);
             System.out.println("send 0");
@@ -231,11 +232,8 @@ public class ServerHandler implements Runnable {
             }
 
             Collections.shuffle(reponses);
-
-            if (reponses.size() > 0) {
-                p.getFichiersOrder().add(randomFichier);
-                p.getQuestions().put(randomFichier, reponses);
-            }
+            p.getFichiersOrder().add(randomFichier);
+            p.getQuestions().put(randomFichier, reponses);
         }
 
         if (p.getQuestions().size() == 0) {

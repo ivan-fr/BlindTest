@@ -917,12 +917,16 @@ public class MainFrame extends javax.swing.JFrame {
                 i++;
             }
 
-            String path = "/images/"+ currentFichierQuestion.get().getName() + "." + currentFichierQuestion.get().getExtension();
-            ImageIcon icon = new ImageIcon(getClass().getResource(path));
-            Image img = icon.getImage();
-            Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
-            ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
-            jLabel19.setIcon(scaledIcon);
+            try {
+                String path = "/images/"+ currentFichierQuestion.get().getName() + "." + currentFichierQuestion.get().getExtension();
+                System.out.println(path);
+                ImageIcon icon = new ImageIcon(getClass().getResource(path));
+                Image img = icon.getImage();
+                Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
+                jLabel19.setIcon(scaledIcon);
+            } catch (Exception ignored) {
+            }
 
             jLabel19.setVisible(true);
             choice1.setVisible(true);
@@ -931,6 +935,19 @@ public class MainFrame extends javax.swing.JFrame {
             choice4.setVisible(true);
         } catch (IndexOutOfBoundsException e) {
             jTabbedPane1.setSelectedIndex(4);
+
+            int j = 0;
+            for (String participant:
+                 party.getParticipants().keySet()) {
+                switch (j) {
+                    case 0 -> score1.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
+                    case 1 -> score2.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
+                    case 2 -> score3.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
+                    case 3 -> score4.setText(String.format("%s - %d", participant, party.getParticipants().get(participant).get()));
+                }
+                j++;
+            }
+
             jLabel19.setVisible(false);
             startButton.setVisible(true);
         }
