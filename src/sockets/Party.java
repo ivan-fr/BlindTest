@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Party extends ASocketModelSerializable<Party> {
@@ -23,7 +24,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private Reponse goodReponse;
     private final Integer howManyQuestions;
     private String lastWinnerQuestion;
-    private boolean timerIsRunning = false;
+    private volatile AtomicBoolean toggleTimer = new AtomicBoolean(false);
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
 
     public Party(String authorKey, String partyName, Integer howManyQuestions) {
@@ -34,27 +35,32 @@ public class Party extends ASocketModelSerializable<Party> {
 
     public void startTimer() {
         Timer timer = new Timer(PARTY_TIMER);
-        timerIsRunning = true;
+        toggleTimer.set(true);
+
         Thread timer1 = new Thread(() -> {
             while (true) {
-                if (!timerIsRunning) {
-                    return;
+                if (!toggleTimer.get()) {
+                    break;
                 }
 
                 try {
                     ServerHandler.broadcastModel(this, EnumSocketAction.SEND_TIMER, timer);
-                    if (timerIsRunning) {
+                    if (toggleTimer.get()) {
                         if (timer.getSeconds().decrementAndGet() <= 0) {
                             ServerHandler.next_question_party(this);
                             break;
                         }
                         Thread.sleep(1000);
                     } else {
-                        return;
+                        break;
                     }
                 } catch (IOException | InterruptedException e) {
-                    break;
+                    return;
                 }
+            }
+
+            while (!toggleTimer.get()) {
+                Thread.onSpinWait();
             }
 
             if (this.getHowManyQuestions() + 1 > this.currentQuestion.get()) {
@@ -65,8 +71,8 @@ public class Party extends ASocketModelSerializable<Party> {
         timer1.start();
     }
 
-    public void stopTimer() {
-        timerIsRunning = false;
+    public void toggleTimer() {
+        toggleTimer.set(!toggleTimer.get());
     }
 
     public Integer getCurrentQuestion() {

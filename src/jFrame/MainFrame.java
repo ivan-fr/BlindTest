@@ -895,9 +895,20 @@ public class MainFrame extends javax.swing.JFrame {
             choice2.setVisible(false);
             choice3.setVisible(false);
             choice4.setVisible(false);
+
+            if (client.isGive_answer()) {
+                client.setGive_answer(false);
+                return;
+            }
+
             return;
         } else {
             jPanel14.setBackground(new java.awt.Color(253, 253, 253));
+        }
+
+        if (client.isGive_answer()) {
+            client.setGive_answer(false);
+            return;
         }
 
         choice1.setText("");
@@ -942,8 +953,7 @@ public class MainFrame extends javax.swing.JFrame {
                 Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
                 jLabel19.setIcon(scaledIcon);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
 
             jLabel19.setVisible(true);

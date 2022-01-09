@@ -24,6 +24,7 @@ public class ClientHandler {
 
     private MainFrame mainFrame = null;
     private User me = null;
+    private boolean give_answer = false;
     private Party mySession = null;
 
     public ClientHandler(Socket clientSocket, Socket broadCastSocket) throws IOException {
@@ -54,6 +55,14 @@ public class ClientHandler {
         }).start();
     }
 
+    public boolean isGive_answer() {
+        return give_answer;
+    }
+
+    public void setGive_answer(boolean give_answer) {
+        this.give_answer = give_answer;
+    }
+
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
@@ -80,6 +89,7 @@ public class ClientHandler {
         }
 
         int response = reader.read();
+        System.out.println(response);
         return response == 1;
     }
 
@@ -162,14 +172,20 @@ public class ClientHandler {
             return false;
         }
 
-        return sendAction(EnumSocketAction.SEND_PARTY_CHOICE, reponse);
+        give_answer = true;
+        if (sendAction(EnumSocketAction.SEND_PARTY_CHOICE, reponse)) {
+            System.out.println("TRUE");
+            return true;
+        }
+        System.out.println("FALSE");
+        return false;
     }
 
     public boolean get_themes() throws IOException {
         return sendAction(EnumSocketAction.GET_THEMES, null);
     }
 
-    private void get_themes_broadcast() throws IOException {
+    private synchronized void get_themes_broadcast() throws IOException {
         int howManyThemes = readerBroadcast.read();
 
         ArrayList<Theme> themes = new ArrayList<>();
@@ -180,7 +196,7 @@ public class ClientHandler {
         mainFrame.updateThemeTable(themes);
     }
 
-    private void get_parties_broadcast() throws IOException {
+    private synchronized void get_parties_broadcast() throws IOException {
         int howManyParties = readerBroadcast.read();
 
         ArrayList<Party> parties = new ArrayList<>();
@@ -202,7 +218,7 @@ public class ClientHandler {
         mainFrame.updateSessionTable(parties);
     }
 
-    private void get_timer_broadcast() throws IOException {
+    private synchronized void get_timer_broadcast() throws IOException {
         Timer timer = Timer.deserialize(readerBroadcast);
 
         if (mySession != null) {

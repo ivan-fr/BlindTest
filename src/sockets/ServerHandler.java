@@ -57,7 +57,7 @@ public class ServerHandler implements Runnable {
                 actionDispatcher(action);
             }
         } catch (IOException | SQLException | InterruptedException e) {
-                System.out.println("Lost connection..");
+                e.printStackTrace();
             }
         }
 
@@ -123,10 +123,9 @@ public class ServerHandler implements Runnable {
             return;
         }
 
-        broadcastModelArray(null, EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
         writer.write(1);
-        System.out.println("send 1");
         writer.flush();
+        broadcastModelArray(null, EnumSocketAction.GET_THEMES, CompositeThemeSingleton.compositeThemeSingleton.list());
     }
 
     public synchronized void add_party() throws IOException, SQLException {
@@ -265,13 +264,13 @@ public class ServerHandler implements Runnable {
         Party pSelected = selectedParty;
 
         if (pSelected == null) {
-            writer.write(0);
             System.out.println("send 0");
+            writer.write(0);
             writer.flush();
             return;
         } else if (pSelected.getLastWinnerQuestion() != null) {
-            writer.write(0);
             System.out.println("send 0");
+            writer.write(0);
             writer.flush();
             return;
         }
@@ -284,7 +283,7 @@ public class ServerHandler implements Runnable {
                     break;
                 }
             }
-            pSelected.stopTimer();
+            pSelected.toggleTimer();
             pSelected.getCurrentQuestionInc();
             pSelected.setLastWinnerQuestion(me);
             try {
@@ -292,22 +291,22 @@ public class ServerHandler implements Runnable {
             } catch (IndexOutOfBoundsException ignored) {
             }
         } else {
-            writer.write(0);
             System.out.println(r.getValue());
             System.out.println(pSelected.getGoodReponse().getValue());
             System.out.println("send 0");
+            writer.write(0);
             writer.flush();
             return;
         }
 
         broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
-        writer.write(1);
         System.out.println("send 1");
+        writer.write(1);
         writer.flush();
 
         // waiting 4 seconds to show the winner
         Thread.sleep(4000);
-        pSelected.startTimer();
+        pSelected.toggleTimer();
         next_question_party();
     }
 
@@ -325,24 +324,13 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-
-
     protected synchronized void next_question_party() throws IOException {
         Party pSelected = selectedParty;
 
-        if (pSelected == null) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
+        if (pSelected != null) {
+            pSelected.setLastWinnerQuestion(null);
+            broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
         }
-
-        pSelected.setLastWinnerQuestion(null);
-
-        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
-        writer.write(1);
-        System.out.println("send 1");
-        writer.flush();
     }
 
     protected static synchronized void next_question_party(Party party) throws IOException {
@@ -380,13 +368,11 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-
-
     protected static synchronized<T extends ASocketModelSerializable<T>>  void broadcastModel(Party selectedPartySource, EnumSocketAction action, T model) throws IOException {
         System.out.println("broadcast model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (runningServer.selectedParty == null || (selectedPartySource != null && selectedPartySource.equals(runningServer.selectedParty))) {
+            if (selectedPartySource == null || runningServer.selectedParty == null || selectedPartySource.equals(runningServer.selectedParty)) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 model.serialize(runningServer.writerBroadcast, true);
             }
@@ -397,7 +383,7 @@ public class ServerHandler implements Runnable {
         System.out.println("broadcast array model process");
 
         for (ServerHandler runningServer : serversHandler) {
-            if (runningServer.selectedParty == null || (selectedPartySource != null && selectedPartySource.equals(runningServer.selectedParty))) {
+            if (selectedPartySource == null || runningServer.selectedParty == null || selectedPartySource.equals(runningServer.selectedParty)) {
                 runningServer.writerBroadcast.write(action.ordinal());
                 runningServer.writerBroadcast.write(models.size());
                 runningServer.writerBroadcast.flush();
