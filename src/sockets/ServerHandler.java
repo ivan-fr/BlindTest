@@ -100,14 +100,7 @@ public class ServerHandler implements Runnable {
 
     public synchronized void send_party_choice() throws IOException, SQLException, InterruptedException {
         Reponse r = Reponse.deserialize(reader);
-        Party pSelected = null;
-        for (Party party:
-                parties) {
-            if (party.getPartyName().contentEquals(selectedParty.getPartyName())) {
-                pSelected = party;
-                break;
-            }
-        }
+        Party pSelected = selectedParty;
 
         if (pSelected == null) {
             writer.write(0);
@@ -153,14 +146,7 @@ public class ServerHandler implements Runnable {
     }
 
     public synchronized void next_question_party() throws IOException {
-        Party pSelected = null;
-        for (Party party:
-                parties) {
-            if (party.getPartyName().contentEquals(selectedParty.getPartyName())) {
-                pSelected = party;
-                break;
-            }
-        }
+        Party pSelected = selectedParty;
 
         if (pSelected == null) {
             writer.write(0);
@@ -179,14 +165,7 @@ public class ServerHandler implements Runnable {
 
     public synchronized void start_party() throws IOException {
         Party p = Party.deserialize(reader);
-        Party pSelected = null;
-        for (Party party:
-                parties) {
-            if (party.getPartyName().contentEquals(p.getPartyName())) {
-                pSelected = party;
-                break;
-            }
-        }
+        Party pSelected = selectedParty;
 
         if (pSelected == null) {
             writer.write(0);
