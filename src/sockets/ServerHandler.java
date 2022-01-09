@@ -143,6 +143,7 @@ public class ServerHandler implements Runnable {
         System.out.println("send 1");
         writer.flush();
         Thread.sleep(4000);
+        pSelected.startTimer();
         next_question_party();
     }
 

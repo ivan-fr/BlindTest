@@ -32,22 +32,24 @@ public class Party extends ASocketModelSerializable<Party> {
     }
 
     public void startTimer() {
-        Timer timer = new Timer(10);
+        Timer timer = new Timer(15);
         timerIsRunning = true;
 
         Thread timer1 = new Thread(() -> {
             while (true) {
                 if (!timerIsRunning) {
-                    break;
+                    return;
                 }
 
                 try {
                     ServerHandler.broadcastModel(this, EnumSocketAction.SEND_TIMER, timer);
-                    if (timer.getSeconds().decrementAndGet() <= 0) {
-                        ServerHandler.next_question_party(this);
-                        break;
+                    if (timerIsRunning) {
+                        if (timer.getSeconds().decrementAndGet() <= 0) {
+                            ServerHandler.next_question_party(this);
+                            break;
+                        }
+                        Thread.sleep(1000);
                     }
-                    Thread.sleep(1000);
                 } catch (IOException | InterruptedException e) {
                     break;
                 }
