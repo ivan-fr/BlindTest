@@ -121,6 +121,8 @@ public class ServerHandler implements Runnable {
             }
         } else {
             writer.write(0);
+            System.out.println(r.getValue());
+            System.out.println(pSelected.getGoodReponse().getValue());
             System.out.println("send 0");
             writer.flush();
             return;
