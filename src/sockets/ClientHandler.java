@@ -153,7 +153,7 @@ public class ClientHandler {
             return false;
         }
 
-        Party p = new Party("", partyName, 0);
+        Party p = new Party(me.getUsername(), partyName, 0);
         return sendAction(EnumSocketAction.START_PARTY, p);
     }
 

@@ -44,9 +44,7 @@ public class Party extends ASocketModelSerializable<Party> {
                 try {
                     ServerHandler.broadcastModel(this, EnumSocketAction.SEND_TIMER, timer);
                     if (timer.getSeconds().decrementAndGet() <= 0) {
-                        if (timerIsRunning) {
-                            ServerHandler.next_question_party(this);
-                        }
+                        ServerHandler.next_question_party(this);
                         break;
                     }
                     Thread.sleep(1000);
@@ -55,7 +53,7 @@ public class Party extends ASocketModelSerializable<Party> {
                 }
             }
 
-            if (this.getHowManyQuestions() > this.currentQuestion.get()) {
+            if (this.getHowManyQuestions() + 1 > this.currentQuestion.get()) {
                 startTimer();
             }
         });
