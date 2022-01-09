@@ -634,11 +634,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel14.setText("Create a session");
         jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 50, -1, -1));
 
-        sessionName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sessionNameActionPerformed(evt);
-            }
-        });
         jPanel4.add(sessionName, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, 267, -1));
 
         createSessionButton.setBackground(new java.awt.Color(62, 115, 189));
@@ -838,7 +833,7 @@ public class MainFrame extends javax.swing.JFrame {
                 jTabbedPane1.setSelectedIndex(2);
             }
         } catch (IOException e) {
-            // problem
+            e.printStackTrace();
         }
     }
 
@@ -984,9 +979,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel23.setText(String.valueOf(timer.getSeconds().get()));
     }
 
-    private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+
 
     private void choice2ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice2.getText();

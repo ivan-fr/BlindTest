@@ -304,6 +304,8 @@ public class ServerHandler implements Runnable {
         writer.write(1);
         System.out.println("send 1");
         writer.flush();
+
+        // waiting 4 seconds to show the winner
         Thread.sleep(4000);
         pSelected.startTimer();
         next_question_party();
