@@ -8,5 +8,6 @@ public enum EnumSocketAction {
     ADD_PARTY,
     GET_PARTIES,
     JOIN_PARTY,
-    START_PARTY
+    START_PARTY,
+    SEND_PARTY_CHOICE
 }

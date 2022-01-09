@@ -2,6 +2,7 @@ package sockets;
 
 import Abstracts.ASocketModelSerializable;
 import jFrame.MainFrame;
+import models.Reponse;
 import models.Theme;
 import models.User;
 
@@ -135,11 +136,26 @@ public class ClientHandler {
         return false;
     }
 
+    public boolean start_party(String partyName) throws IOException {
+        if (me == null) {
+            return false;
+        }
+
+        Party p = new Party("", partyName, 0);
+        return sendAction(EnumSocketAction.START_PARTY, p);
+    }
+
+    public boolean send_party_choice(Reponse reponse) throws IOException {
+        if (me == null) {
+            return false;
+        }
+
+        return sendAction(EnumSocketAction.SEND_PARTY_CHOICE, reponse);
+    }
+
     public boolean get_themes() throws IOException {
         return sendAction(EnumSocketAction.GET_THEMES, null);
     }
-
-
 
     private void get_themes_broadcast() throws IOException {
         int howManyThemes = readerBroadcast.read();

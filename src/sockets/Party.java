@@ -18,6 +18,7 @@ public class Party extends ASocketModelSerializable<Party> {
     private final List<String> themesKey = new ArrayList<>();
     private final HashMap<String, AtomicInteger> participants = new HashMap<>();
     private final HashMap<Fichier, List<Reponse>> questions = new HashMap<>();
+    private final List<Fichier> fichiersOrder = new ArrayList<>();
     private Reponse goodReponse;
     private final Integer howManyQuestions;
     private final AtomicInteger currentQuestion = new AtomicInteger(0);
@@ -31,6 +32,9 @@ public class Party extends ASocketModelSerializable<Party> {
     public Integer getCurrentQuestion() {
         return currentQuestion.get();
     }
+    public Integer getCurrentQuestionInc() {
+        return currentQuestion.incrementAndGet();
+    }
 
     public List<String> getThemesKeys() {
         return themesKey;
@@ -42,6 +46,10 @@ public class Party extends ASocketModelSerializable<Party> {
 
     public Reponse getGoodReponse() {
         return goodReponse;
+    }
+
+    public List<Fichier> getFichiersOrder() {
+        return fichiersOrder;
     }
 
     public String getAuthorKey() {
@@ -108,6 +116,13 @@ public class Party extends ASocketModelSerializable<Party> {
             goodReponse.serialize(writer, false);
         }
 
+        writer.write(getFichiersOrder().size());
+
+        for (Fichier f:
+             getFichiersOrder()) {
+            f.serialize(writer, false);
+        }
+
         if (flush) {
             writer.flush();
         }
@@ -156,6 +171,12 @@ public class Party extends ASocketModelSerializable<Party> {
         }
 
         party.goodReponse = Reponse.deserialize(reader);
+
+        int sizeFichiersOrder = reader.read();
+
+        for (int i = 0; i < sizeFichiersOrder; i++) {
+            party.getFichiersOrder().add(Fichier.deserialize(reader));
+        }
 
         return party;
     }

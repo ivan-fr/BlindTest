@@ -1,7 +1,6 @@
 package jFrame;
 
 
-import models.Fichier;
 import models.Reponse;
 import models.Theme;
 import sockets.ClientHandler;
@@ -848,6 +847,10 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void onUpdateMySessionGame(Party party) {
+        if (!party.getAuthorKey().contentEquals((String) client.getMe().getKey()) || party.getCurrentQuestion() > 0) {
+            startButton.setVisible(false);
+        }
+
         user1.setText("");
         user2.setText("");
         user3.setText("");
@@ -876,6 +879,40 @@ public class MainFrame extends javax.swing.JFrame {
             }
             i++;
         }
+
+        choice1.setText("");
+        choice2.setText("");
+        choice3.setText("");
+        choice4.setText("");
+
+        if (party.getCurrentQuestion() == 0) {
+            return;
+        }
+
+        choice1.setVisible(true);
+        choice2.setVisible(true);
+        choice3.setVisible(true);
+        choice4.setVisible(true);
+
+        // Broadcast this to all players
+        i = 0;
+        for (Reponse reponse:
+                party.getQuestions().get(party.getFichiersOrder().get(party.getCurrentQuestion()))) {
+            switch (i) {
+                case 0 -> choice1.setText(reponse.getValue());
+                case 1 -> choice2.setText(reponse.getValue());
+                case 2 -> choice3.setText(reponse.getValue());
+                case 3 -> choice4.setText(reponse.getValue());
+            }
+            i++;
+        }
+
+        String path = "/images/"+ party.getFichiersOrder().get(party.getCurrentQuestion()).getName() + "." + party.getFichiersOrder().get(party.getCurrentQuestion()).getExtension();
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        Image img = icon.getImage();
+        Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
+        jLabel19.setIcon(scaledIcon);
     }
 
     private void sessionNameActionPerformed(java.awt.event.ActionEvent evt) {
@@ -885,20 +922,60 @@ public class MainFrame extends javax.swing.JFrame {
     private void choice2ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice2.getText();
         //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+        try {
+            if (!client.send_party_choice(new Reponse(response))) {
+                choice1.setVisible(false);
+                choice2.setVisible(false);
+                choice3.setVisible(false);
+                choice4.setVisible(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void choice1ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice1.getText();
         //jPanel14.setBackground(new java.awt.Color(94, 191, 96));
+        try {
+            if (!client.send_party_choice(new Reponse(response))) {
+                choice1.setVisible(false);
+                choice2.setVisible(false);
+                choice3.setVisible(false);
+                choice4.setVisible(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void choice3ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice3.getText();
         //jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+        try {
+            if (!client.send_party_choice(new Reponse(response))) {
+                choice1.setVisible(false);
+                choice2.setVisible(false);
+                choice3.setVisible(false);
+                choice4.setVisible(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void choice4ActionPerformed(java.awt.event.ActionEvent evt) {
         String response = choice4.getText();
+        try {
+            if (!client.send_party_choice(new Reponse(response))) {
+                choice1.setVisible(false);
+                choice2.setVisible(false);
+                choice3.setVisible(false);
+                choice4.setVisible(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void joinSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -975,42 +1052,14 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
-
-        choice1.setText("");
-        choice2.setText("");
-        choice3.setText("");
-        choice4.setText("");
-
-        Party party = client.getMySession();
-
-        // Broadcast this to all players
-
-        for (Fichier f: party.getQuestions().keySet()) {
-            int i = 0;
-            for (Reponse reponse:
-                 party.getQuestions().get(f)) {
-                switch (i) {
-                    case 0 -> choice1.setText(reponse.getValue());
-                    case 1 -> choice2.setText(reponse.getValue());
-                    case 2 -> choice3.setText(reponse.getValue());
-                    case 3 -> choice4.setText(reponse.getValue());
-                }
-                i++;
+        try {
+            if (client.start_party(client.getMySession().getPartyName())) {
+                startButton.setVisible(false);
             }
-
-            String path = "/images/"+ f.getName() + "." + f.getExtension();
-            System.out.println(path);
-
-            ImageIcon icon = new ImageIcon(getClass().getResource(path));
-            Image img = icon.getImage();
-            Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
-            ImageIcon scaledIcon = new ImageIcon(scaledImg) ;
-            jLabel19.setIcon(scaledIcon);
-            break;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        startButton.setVisible(false);
     }
-
 
     private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {
         jTabbedPane1.setSelectedIndex(3);
