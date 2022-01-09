@@ -842,6 +842,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             if (client.add_party(sessionName.getText(), howManyQuestions, themes)) {
                 jLabel17.setText(client.getMySession().getPartyName());
+                startButton.setVisible(true);
                 jTabbedPane1.setSelectedIndex(2);
             }
         } catch (IOException e) {
@@ -1139,8 +1140,25 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt)  {
+        try {
+            client.leaveSession();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        clearComponents();
         jTabbedPane1.setSelectedIndex(3);
+    }
+
+
+    private void clearComponents() {
+        sessionName.setText("");
+        jSpinner1.setValue(0);
+        textJoinSession.setText("");
+        for (int i = 0; i < themeTable.getModel().getRowCount(); i++) {
+                themeTable.getModel().setValueAt(false,i,1);
+        }
+
     }
 
     // Variables declaration
