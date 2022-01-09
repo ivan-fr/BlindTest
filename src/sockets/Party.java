@@ -48,6 +48,8 @@ public class Party extends ASocketModelSerializable<Party> {
                             break;
                         }
                         Thread.sleep(1000);
+                    } else {
+                        return;
                     }
                 } catch (IOException | InterruptedException e) {
                     break;
