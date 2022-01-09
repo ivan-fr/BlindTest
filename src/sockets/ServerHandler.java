@@ -79,7 +79,23 @@ public class ServerHandler implements Runnable {
             start_party();
         } else if (EnumSocketAction.SEND_PARTY_CHOICE.ordinal() == action) {
             send_party_choice();
+        } else if (EnumSocketAction.LEAVE_PARTY.ordinal() == action) {
+            leaveSession();
         }
+    }
+
+    public void leaveSession() throws IOException {
+        if (me == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        selectedParty = null;
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
     }
 
     public synchronized void send_party_choice() throws IOException, SQLException, InterruptedException {
@@ -317,6 +333,7 @@ public class ServerHandler implements Runnable {
         }
 
         me = null;
+        selectedParty = null;
         serversHandler.remove(this);
 
         writer.write(1);

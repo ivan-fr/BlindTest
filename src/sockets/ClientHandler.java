@@ -105,6 +105,15 @@ public class ClientHandler {
         return false;
     }
 
+    public boolean leaveSession() throws IOException {
+        if (sendAction(EnumSocketAction.LEAVE_PARTY, null)) {
+            mySession = null;
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean add_party(String partyName, Integer howManyQuestions, List<String> themes) throws IOException {
         if (me == null) {
             return false;
