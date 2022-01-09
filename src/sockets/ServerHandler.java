@@ -206,6 +206,60 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
+    public synchronized void join_party() throws IOException {
+        Party partyJoin = Party.deserialize(reader);
+        Party pSelected = null;
+        for (Party party:
+                parties) {
+            if (party.getPartyName().contentEquals(partyJoin.getPartyName()) && party.getCurrentQuestion() == 0) {
+                pSelected = party;
+                Predicate<Party> predicate = party1 -> !(party1.getCurrentQuestion() > 0 && party1.getPartyName().contentEquals(partyJoin.getPartyName()));
+                parties = parties.stream().filter(predicate).collect(Collectors.toList());
+                break;
+            }
+        }
+
+        if (pSelected == null) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        AtomicInteger aI = new AtomicInteger();
+        aI.set(0);
+        pSelected.getParticipants().put(me, aI);
+        selectedParty = pSelected;
+
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
+        writer.write(1);
+        System.out.println("send 1");
+        pSelected.serialize(writer, false);
+        writer.flush();
+    }
+
+
+    public synchronized void start_party() throws IOException {
+        Party p = Party.deserialize(reader);
+        Party pSelected = selectedParty;
+
+        if (!p.getAuthorKey().contentEquals(selectedParty.getAuthorKey())) {
+            writer.write(0);
+            System.out.println("send 0");
+            writer.flush();
+            return;
+        }
+
+        pSelected.getCurrentQuestionInc();
+
+        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
+        selectedParty.startTimer();
+
+        writer.write(1);
+        System.out.println("send 1");
+        writer.flush();
+    }
+
     public void leaveSession() throws IOException {
         if (me == null) {
             writer.write(0);
@@ -302,59 +356,6 @@ public class ServerHandler implements Runnable {
         }
 
         broadcastModelArray(party, EnumSocketAction.GET_PARTIES, parties);
-    }
-
-    public synchronized void start_party() throws IOException {
-        Party p = Party.deserialize(reader);
-        Party pSelected = selectedParty;
-
-        if (!p.getAuthorKey().contentEquals(selectedParty.getAuthorKey())) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        pSelected.getCurrentQuestionInc();
-
-        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
-        selectedParty.startTimer();
-
-        writer.write(1);
-        System.out.println("send 1");
-        writer.flush();
-    }
-
-    public synchronized void join_party() throws IOException {
-        Party partyJoin = Party.deserialize(reader);
-        Party pSelected = null;
-        for (Party party:
-             parties) {
-            if (party.getPartyName().contentEquals(partyJoin.getPartyName()) && party.getCurrentQuestion() == 0) {
-                pSelected = party;
-                Predicate<Party> predicate = party1 -> !(party1.getCurrentQuestion() > 0 && party1.getPartyName().contentEquals(partyJoin.getPartyName()));
-                parties = parties.stream().filter(predicate).collect(Collectors.toList());
-                break;
-            }
-        }
-
-        if (pSelected == null) {
-            writer.write(0);
-            System.out.println("send 0");
-            writer.flush();
-            return;
-        }
-
-        AtomicInteger aI = new AtomicInteger();
-        aI.set(0);
-        pSelected.getParticipants().put(me, aI);
-        selectedParty = pSelected;
-
-        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
-        writer.write(1);
-        System.out.println("send 1");
-        pSelected.serialize(writer, false);
-        writer.flush();
     }
 
 
