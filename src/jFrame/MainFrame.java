@@ -33,15 +33,12 @@ import javax.swing.table.DefaultTableModel;
 public class MainFrame extends javax.swing.JFrame {
 
 
-
-    DefaultTableModel tableModel;
     ClientHandler client;
 
     public MainFrame(ClientHandler client) {
         this.client = client ;
         initComponents();
         sessionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableModel = (DefaultTableModel) sessionTable.getModel();
         jTabbedPane1.setSelectedIndex(0);
     }
 
@@ -186,12 +183,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Password: ");
-
-        signInUsername.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signInUsernameActionPerformed(evt);
-            }
-        });
 
         signInButton.setBackground(new java.awt.Color(1, 199, 71));
         signInButton.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
@@ -821,13 +812,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
 
-
-    private void signInUsernameActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
     private void createSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
         Integer howManyQuestions = (Integer) jSpinner1.getValue();
+
+        if (sessionName.getText() == null || howManyQuestions <= 0 || howManyQuestions > 10 ) {
+            return;
+        }
+
         List<String> themes = new ArrayList<>();
 
         for (int i = 0; i < themeTable.getModel().getRowCount(); i++) {
@@ -836,7 +827,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
 
-        if (sessionName.getText() == null || howManyQuestions <= 0 || howManyQuestions > 10 || themes.size() == 0) {
+        if (themes.size() == 0) {
             return;
         }
 
