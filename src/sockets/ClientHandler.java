@@ -191,7 +191,6 @@ public class ClientHandler {
                 }
             }
         }
-
         mainFrame.updateSessionTable(parties);
     }
 

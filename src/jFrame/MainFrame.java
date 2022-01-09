@@ -462,7 +462,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
 
         user1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user1.setText("User1");
@@ -497,7 +497,7 @@ public class MainFrame extends javax.swing.JFrame {
         user2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user2.setText("User2");
 
-        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -527,7 +527,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
+        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
 
         user3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user3.setText("User3");
@@ -560,7 +560,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (2).png"))); // NOI18N
+        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
 
         user4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         user4.setText("User4");
