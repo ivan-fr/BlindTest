@@ -895,20 +895,13 @@ public class MainFrame extends javax.swing.JFrame {
             choice2.setVisible(false);
             choice3.setVisible(false);
             choice4.setVisible(false);
-
-            if (client.isGive_answer()) {
-                client.setGive_answer(false);
-                return;
-            }
-
-            return;
-        } else {
-            jPanel14.setBackground(new java.awt.Color(253, 253, 253));
-        }
-
-        if (client.isGive_answer()) {
             client.setGive_answer(false);
             return;
+        } else {
+            if (client.isGive_answer()) {
+                return;
+            }
+            jPanel14.setBackground(new java.awt.Color(253, 253, 253));
         }
 
         choice1.setText("");
@@ -947,7 +940,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             try {
                 String path = "/images/"+ currentFichierQuestion.get().getName() + "." + currentFichierQuestion.get().getExtension();
-                //System.out.println(path);
+                System.out.println(path);
                 ImageIcon icon = new ImageIcon(getClass().getResource(path));
                 Image img = icon.getImage();
                 Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
@@ -972,10 +965,10 @@ public class MainFrame extends javax.swing.JFrame {
             for (String participant:
                  party.getParticipants().keySet()) {
                 switch (j) {
-                    case 0 -> score1.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
-                    case 1 -> score2.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
-                    case 2 -> score3.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
-                    case 3 -> score4.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
+                    case 0 -> score1.setText(String.format("%s                                    %d", participant, party.getParticipants().get(participant).get()));
+                    case 1 -> score2.setText(String.format("%s                                    %d", participant, party.getParticipants().get(participant).get()));
+                    case 2 -> score3.setText(String.format("%s                                    %d", participant, party.getParticipants().get(participant).get()));
+                    case 3 -> score4.setText(String.format("%s                                    %d", participant, party.getParticipants().get(participant).get()));
                 }
                 j++;
             }

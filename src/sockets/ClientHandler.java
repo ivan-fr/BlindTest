@@ -221,6 +221,10 @@ public class ClientHandler {
     private synchronized void get_timer_broadcast() throws IOException {
         Timer timer = Timer.deserialize(readerBroadcast);
 
+        if (timer.getSeconds().get() <= 1 && give_answer) {
+            give_answer = false;
+        }
+
         if (mySession != null) {
             mainFrame.updateTimer(timer);
         }
