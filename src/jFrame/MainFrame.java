@@ -754,7 +754,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         score3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         score3.setForeground(new java.awt.Color(255, 255, 255));
-        score3.setText("USER3                                                               5");
+        score3.setText("");
         jPanel9.add(score3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 200, 420, -1));
 
         leaveButton.setBackground(new java.awt.Color(114, 157, 217));
@@ -770,17 +770,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         score4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         score4.setForeground(new java.awt.Color(255, 255, 255));
-        score4.setText("USER4                                                               5");
+        score4.setText("");
         jPanel9.add(score4, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 420, -1));
 
         score1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         score1.setForeground(new java.awt.Color(255, 255, 255));
-        score1.setText("USER1                                                               5");
+        score1.setText("");
         jPanel9.add(score1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, 420, -1));
 
         score2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         score2.setForeground(new java.awt.Color(255, 255, 255));
-        score2.setText("USER2                                                               5");
+        score2.setText("");
         jPanel9.add(score2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, 420, -1));
 
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -972,10 +972,10 @@ public class MainFrame extends javax.swing.JFrame {
             for (String participant:
                  party.getParticipants().keySet()) {
                 switch (j) {
-                    case 0 -> score1.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
-                    case 1 -> score2.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
-                    case 2 -> score3.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
-                    case 3 -> score4.setText(String.format("%s - SCORE: %d", participant, party.getParticipants().get(participant).get()));
+                    case 0 -> score1.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
+                    case 1 -> score2.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
+                    case 2 -> score3.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
+                    case 3 -> score4.setText(String.format("%s                                                             %d", participant, party.getParticipants().get(participant).get()));
                 }
                 j++;
             }
@@ -1000,7 +1000,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3.setVisible(false);
                 choice4.setVisible(false);
                 jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+                System.out.println("if");
             } else {
+                System.out.println("else");
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
 
             }
@@ -1018,7 +1020,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3.setVisible(false);
                 choice4.setVisible(false);
                 jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+                System.out.println("if");
             } else {
+                System.out.println("else");
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
@@ -1035,7 +1039,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3.setVisible(false);
                 choice4.setVisible(false);
                 jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+                System.out.println("if");
             } else {
+                System.out.println("else");
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
@@ -1052,7 +1058,9 @@ public class MainFrame extends javax.swing.JFrame {
                 choice3.setVisible(false);
                 choice4.setVisible(false);
                 jPanel14.setBackground(new java.awt.Color(255, 70, 70));
+                System.out.println("if");
             } else {
+                System.out.println("else");
                 jPanel14.setBackground(new java.awt.Color(94, 191, 96));
             }
         } catch (IOException e) {
@@ -1061,7 +1069,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void joinSessionButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if (textJoinSession.getText() == null) {
+        if (textJoinSession.getText() == null || textJoinSession.getText().trim().isEmpty()) {
             return;
         }
 
@@ -1158,6 +1166,12 @@ public class MainFrame extends javax.swing.JFrame {
         sessionName.setText("");
         jSpinner1.setValue(0);
         textJoinSession.setText("");
+        jLabel23.setText("") ;
+        score1.setText("");
+        score2.setText("");
+        score3.setText("");
+        score4.setText("");
+
         for (int i = 0; i < themeTable.getModel().getRowCount(); i++) {
                 themeTable.getModel().setValueAt(false,i,1);
         }

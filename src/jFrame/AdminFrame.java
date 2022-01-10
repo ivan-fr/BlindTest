@@ -197,7 +197,6 @@ public class AdminFrame extends javax.swing.JFrame {
 
         jLabel5.setText("File:    " + fileAbsolutePath + "    is added");
         fileInput.setText("");
-        themeInput.setText("");
         answerInput.setText("");
 
         file = null;
