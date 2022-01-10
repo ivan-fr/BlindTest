@@ -186,7 +186,6 @@ public class ServerHandler implements Runnable {
                     .filter(byRandomThemeTemoin)
                     .collect(Collectors.toList());
 
-            fichiersByTheme.remove(randomFichier);
             reponses.add(randomFichier.getReponse());
 
             if (first) {
