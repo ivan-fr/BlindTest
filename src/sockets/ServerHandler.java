@@ -171,6 +171,21 @@ public class ServerHandler implements Runnable {
             Fichier randomFichier = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
             List<Reponse> reponses = new ArrayList<>();
 
+            Predicate<Fichier> byRandomThemeTemoin = fichier -> {
+                try {
+                    return fichier.getTheme().getValue().contentEquals(randomTheme) && !fichier.equals(randomFichier);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            };
+
+            List<Fichier> fichiersByThemeTemoin = CompositeFichierSingleton.compositeFichierSingleton
+                    .list()
+                    .stream()
+                    .filter(byRandomThemeTemoin)
+                    .collect(Collectors.toList());
+
             fichiersByTheme.remove(randomFichier);
             reponses.add(randomFichier.getReponse());
 
@@ -179,10 +194,10 @@ public class ServerHandler implements Runnable {
                 first = false;
             }
 
-            for (int j = 0; j < Math.min(fichiersByTheme.size(), 3); j++) {
-                Fichier randomFichierForTheme = fichiersByTheme.get(rand.nextInt(fichiersByTheme.size()));
+            for (int j = 0; j < Math.min(fichiersByThemeTemoin.size(), 3); j++) {
+                Fichier randomFichierForTheme = fichiersByThemeTemoin.get(rand.nextInt(fichiersByTheme.size()));
                 reponses.add(randomFichierForTheme.getReponse());
-                fichiersByTheme.remove(randomFichierForTheme);
+                fichiersByThemeTemoin.remove(randomFichierForTheme);
             }
 
             Collections.shuffle(reponses);
@@ -237,7 +252,6 @@ public class ServerHandler implements Runnable {
         writer.flush();
     }
 
-
     public synchronized void start_party() throws IOException {
         Party p = Party.deserialize(reader);
         Party pSelected = selectedParty;
@@ -251,7 +265,7 @@ public class ServerHandler implements Runnable {
 
         pSelected.getCurrentQuestionInc();
 
-        broadcastModelArray(selectedParty, EnumSocketAction.GET_PARTIES, parties);
+        broadcastModelArray(null, EnumSocketAction.GET_PARTIES, parties);
 
         if (pSelected.getParticipants().size() > 1) {
             selectedParty.startTimer();
