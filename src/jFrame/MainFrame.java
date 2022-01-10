@@ -838,8 +838,8 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void onUpdateMySessionGame(Party party) {
-        System.out.println(party.getLastWinnerQuestion());
-        System.out.println("winner question");
+        // System.out.println(party.getLastWinnerQuestion());
+        // System.out.println("winner question");
 
         if (!party.getAuthorKey().contentEquals((String) client.getMe().getKey()) || party.getCurrentQuestion() > 0) {
             startButton.setVisible(false);
@@ -943,7 +943,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             try {
                 String path = "/images/"+ currentFichierQuestion.get().getName() + "." + currentFichierQuestion.get().getExtension();
-                System.out.println(path);
+                // System.out.println(path);
                 ImageIcon icon = new ImageIcon(getClass().getResource(path));
                 Image img = icon.getImage();
                 Image scaledImg = img.getScaledInstance(jLabel19.getWidth(), jLabel19.getHeight(), Image.SCALE_SMOOTH);
