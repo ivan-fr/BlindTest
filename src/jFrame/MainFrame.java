@@ -61,7 +61,7 @@ public class MainFrame extends javax.swing.JFrame {
         for (Party p:
                 parties) {
             if (p.getCurrentQuestion() == 0 && p.getParticipants().size() < 4) {
-                ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKey().toString(), p.getHowManyQuestions()});
+                ((DefaultTableModel) sessionTable.getModel()).addRow(new Object[]{p.getAuthorKey(), p.getPartyName(), p.getThemesKey().toString(), p.getFichiersOrder().size()});
             }
         }
     }
