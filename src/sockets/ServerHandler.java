@@ -195,7 +195,7 @@ public class ServerHandler implements Runnable {
             }
 
             for (int j = 0; j < Math.min(fichiersByThemeTemoin.size(), 3); j++) {
-                Fichier randomFichierForTheme = fichiersByThemeTemoin.get(rand.nextInt(fichiersByTheme.size()));
+                Fichier randomFichierForTheme = fichiersByThemeTemoin.get(rand.nextInt(fichiersByThemeTemoin.size()));
                 reponses.add(randomFichierForTheme.getReponse());
                 fichiersByThemeTemoin.remove(randomFichierForTheme);
             }
