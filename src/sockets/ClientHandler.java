@@ -89,7 +89,7 @@ public class ClientHandler {
         }
 
         int response = reader.read();
-        System.out.println(response);
+        //System.out.println(response);
         return response == 1;
     }
 
@@ -174,10 +174,10 @@ public class ClientHandler {
 
         give_answer = true;
         if (sendAction(EnumSocketAction.SEND_PARTY_CHOICE, reponse)) {
-            System.out.println("TRUE");
+            //System.out.println("TRUE");
             return true;
         }
-        System.out.println("FALSE");
+        //System.out.println("FALSE");
         return false;
     }
 
