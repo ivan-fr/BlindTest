@@ -671,7 +671,7 @@ public class MainFrame extends javax.swing.JFrame {
 
                 },
                 new String [] {
-                        "User", "Session Name", "Themes", "N° Questions"
+                        "Author", "Session Name", "Themes", "N° Questions"
                 }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -838,8 +838,8 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void onUpdateMySessionGame(Party party) {
-        //System.out.println(party.getLastWinnerQuestion());
-        //System.out.println("winner question");
+        System.out.println(party.getLastWinnerQuestion());
+        System.out.println("winner question");
 
         if (!party.getAuthorKey().contentEquals((String) client.getMe().getKey()) || party.getCurrentQuestion() > 0) {
             startButton.setVisible(false);
@@ -899,6 +899,9 @@ public class MainFrame extends javax.swing.JFrame {
             return;
         } else {
             if (client.isGive_answer()) {
+                if (client.getMySession().getParticipants().size() == 1) {
+                    client.setGive_answer(false);
+                }
                 return;
             }
             jPanel14.setBackground(new java.awt.Color(253, 253, 253));
